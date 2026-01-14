@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
     NO_SUCH_ROLE("NO_SUCH_ROLE", "존재하지 않는 역할입니다."),
-    LOGIN_ERROR("LOGIN_ERROR", "잘못된 로그인 입니다.");
+    LOGIN_ERROR("LOGIN_ERROR", "잘못된 로그인 입니다."),
+    DUPLICATE_EMAIL("DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다.");
 
     private final String code;
     private final String message;
