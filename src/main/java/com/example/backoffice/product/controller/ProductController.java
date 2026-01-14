@@ -1,13 +1,9 @@
 package com.example.backoffice.product.controller;
 
-import com.example.backoffice.admin.exception.AdminNotFoundException;
-import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
-import com.example.backoffice.common.exception.ErrorCode;
-import com.example.backoffice.product.dto.CreateProductRequest;
-import com.example.backoffice.product.dto.CreateProductResponse;
-import com.example.backoffice.product.dto.GetOneProductResponse;
-import com.example.backoffice.product.dto.GetProductResponse;
+import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.LoginFailException;
+import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-    private final AdminService adminService;
 
     @PostMapping("/admin/products")
     public ResponseEntity<CreateProductResponse> createProduct(@Valid @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @RequestBody CreateProductRequest request){
         if (sessionAdmin == null) {
-            throw new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND);
+            throw new LoginFailException(AuthErrorCode.LOGIN_DENIED_ERROR);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(sessionAdmin.getId(), request));
     }
@@ -54,5 +49,10 @@ public class ProductController {
     @GetMapping("/admin/products/{productId}")
     public ResponseEntity<GetOneProductResponse> getOneProduct(@PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findOneProduct(productId));
+    }
+
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<UpdateProductInfoResponse> updateProduct(@RequestBody UpdateProductInfoRequest request, @PathVariable Long productId) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductInfo(request, productId));
     }
 }

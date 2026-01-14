@@ -4,13 +4,11 @@ import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.exception.ErrorCode;
-import com.example.backoffice.product.dto.CreateProductRequest;
-import com.example.backoffice.product.dto.CreateProductResponse;
-import com.example.backoffice.product.dto.GetOneProductResponse;
-import com.example.backoffice.product.dto.GetProductResponse;
+import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -79,6 +77,23 @@ public class ProductService {
                 product.getModifiedAt(),
                 product.getAdministrator().getName(),
                 product.getAdministrator().getEmail()
+        );
+    }
+
+    @Transactional
+    public UpdateProductInfoResponse updateProductInfo(UpdateProductInfoRequest request, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.")
+        );
+
+        product.update(request.getName(), request.getCategory(), request.getPrice());
+        return new UpdateProductInfoResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getCreatedAt(),
+                product.getModifiedAt()
         );
     }
 }
