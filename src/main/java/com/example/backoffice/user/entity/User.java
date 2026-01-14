@@ -1,6 +1,7 @@
 package com.example.backoffice.user.entity;
 
 import com.example.backoffice.common.config.BaseEntity;
+import com.example.backoffice.user.consts.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,12 +15,23 @@ public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @Column(unique = true)
     private String email;
+
     private String phoneNumber;
-    private String status;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
+    public User(String name, String email, String phoneNumber, UserStatus status) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+    }
 
 
 

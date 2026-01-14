@@ -1,9 +1,18 @@
 package com.example.backoffice.user.consts;
 
-public enum UserEnum {
-    ACTIVE("활성")
-    NON_ACTIVE("비활성")
-    SUSPEND("정지")
-        
+import lombok.Getter;
+
+@Getter
+public enum UserStatus {
+
+    ACTIVE("활성"),
+    NON_ACTIVE("비활성"),
+    SUSPEND("정지");
+
+    private final String description;
+
+    UserStatus(String description) {
+        this.description = description;
+    }
 
 }
