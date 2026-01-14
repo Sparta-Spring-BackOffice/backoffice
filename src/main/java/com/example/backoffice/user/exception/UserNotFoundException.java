@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends UserException {
     public UserNotFoundException(ErrorCode errorCode) {
-        super(HttpStatus.BAD_REQUEST, errorCode);
+        super(HttpStatus.NOT_FOUND, errorCode);
     }
 }
