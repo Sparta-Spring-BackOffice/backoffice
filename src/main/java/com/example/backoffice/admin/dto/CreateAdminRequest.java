@@ -1,5 +1,6 @@
 package com.example.backoffice.admin.dto;
 
+import com.example.backoffice.admin.consts.AdminRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,19 +9,19 @@ import lombok.Getter;
 
 @Getter
 public class CreateAdminRequest {
-    @NotBlank
+    @NotBlank(message = "이름은 필수 입력 항목입니다.")
     private String name;
-    @NotBlank
+    @NotBlank(message = "이메일은 필수 입력 항목입니다.")
     @Email
     private String email;
-    @Min(value = 8)
+    @Min(value = 8, message = "비밀번호는 8자 이상 입력해야 합니다.")
     private String password;
-    @NotBlank
+    @NotBlank(message = "전화번호는 필수 입력 항목입니다.")
     @Pattern(
             regexp = "^010-?\\d{4}-?\\d{4}$",
             message = "전화번호 형식이 올바르지 않습니다."
     )
     private String phone;
-    @NotBlank
+    @NotBlank(message = "권한을 선택해 주세요.")
     private String role;
 }
