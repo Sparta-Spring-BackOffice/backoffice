@@ -1,0 +1,36 @@
+package com.example.backoffice.admin.dto;
+
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+@Getter
+public class GetAdminResponse {
+    private final Long id;
+    private final String name;
+    private final String email;
+    private final String phone;
+    private final String role;
+    private final String status;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
+    private final int pageNo;
+    private final int pageSize;
+    private final Long totalElements;
+    private final int totalPages;
+
+    public GetAdminResponse(Long id, String name, String email, String phone, String role, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, int pageNo, int pageSize, Long totalElements, int totalPages) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+    }
+}

@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AdminRole {
-    SUPER_ADMIN("super"),
-    OP_ADMIN("op"),
-    CS_ADMIN("cs");
+    SUPER_ADMIN("SUPER_ADMIN"),
+    OP_ADMIN("OP_ADMIN"),
+    CS_ADMIN("CS_ADMIN");
 
     private final String roleName;
 

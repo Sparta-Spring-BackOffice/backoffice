@@ -8,20 +8,20 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AdminStatus {
-    ACTIVE("active"),
-    NON_ACTIVE("non_active"),
-    SUSPENDED("suspended"),
-    PENDING("pending"),
-    DENIED("denied");
+    ACTIVE("ACTIVE"),
+    NON_ACTIVE("NON_ACTIVE"),
+    SUSPENDED("SUSPENDED"),
+    PENDING("PENDING"),
+    DENIED("DENIED");
 
-    private final String statusName;
+    private final String status;
 
-    public static AdminStatus getStatus(String statusName) {
-        for(AdminStatus status : AdminStatus.values()) {
-            if(status.statusName.equals(statusName)){
-                return status;
+    public static AdminStatus getStatus(String status) {
+        for (AdminStatus adminStatus : AdminStatus.values()) {
+            if (adminStatus.status.equals(status)) {
+                return adminStatus;
             }
         }
-        throw new NoSuchAdminStatusException(ErrorCode.NO_SUCH_STATUS);
+        throw new NoSuchAdminStatus(ErrorCode.NO_SUCH_STATUS);
     }
 }
