@@ -2,12 +2,15 @@ package com.example.backoffice.authentification.service;
 
 import com.example.backoffice.admin.consts.DeclineReason;
 import com.example.backoffice.admin.entity.Administrator;
+import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.consts.AuthStatus;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
+import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginStatusException;
 import com.example.backoffice.common.config.PasswordEncoder;
+import com.example.backoffice.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,22 +26,20 @@ public class AuthentificationService {
     @Transactional
     public LoginResponse login(LoginRequest request) {
         Administrator admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 이메일")//에러 코드 추후 수정
+                () -> new AdminNotFoundException(ErrorCode.DUPLICATE_EMAIL)//에러 코드 추후 수정(이메일 불일치)
         );
         if(!pe.matches(request.getPassword(), admin.getPassword())){
-            throw new IllegalStateException("비밀번호가 틀립니다.");//에러 코드 추후 수정
+            throw new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND);//에러 코드 추후 수정(비밀번호 불일치)
         }
         //AdminStatus
         switch (admin.getStatus()) {
             case ACTIVE -> { /* OK */ }
-            case PENDING -> throw new LoginStatusException("계정 승인 대기 중입니다.");//에러 코드 추후 수정
+            case PENDING -> throw new LoginStatusException(AuthErrorCode.LOGIN_PENDING_ERROR);
             case DENIED -> {
-                throw new LoginStatusException(
-                        "계정 신청이 거부되었습니다. 사유: " + declineReasonMessage(admin.getDeclineFor())
-                );
+                throw new LoginStatusException(AuthErrorCode.LOGIN_PENDING_ERROR);//사유 추가 해야함
             }
-            case SUSPENDED -> throw new LoginStatusException("정지된 계정입니다.");//에러 코드 추후 수정
-            case NON_ACTIVE -> throw new LoginStatusException("비활성화된 계정입니다.");//에러 코드 추후 수정
+            case SUSPENDED -> throw new LoginStatusException(AuthErrorCode.LOGIN_SUSPENDED_ERROR);
+            case NON_ACTIVE -> throw new LoginStatusException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
         }
 
 
