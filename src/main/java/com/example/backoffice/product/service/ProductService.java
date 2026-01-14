@@ -3,6 +3,7 @@ package com.example.backoffice.product.service;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
+import com.example.backoffice.common.exception.ErrorCode;
 import com.example.backoffice.product.dto.CreateProductRequest;
 import com.example.backoffice.product.dto.CreateProductResponse;
 import com.example.backoffice.product.dto.GetOneProductResponse;
@@ -25,7 +26,7 @@ public class ProductService {
     @Transactional
     public CreateProductResponse createProduct(CreateProductRequest request, Long adminId) {
         Administrator admin = adminRepository.findById(adminId).orElseThrow(
-                () -> new AdminNotFoundException()
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
         Product product = new Product(
                 request.getName(),
