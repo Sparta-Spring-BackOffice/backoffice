@@ -6,10 +6,8 @@ import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.consts.AuthStatus;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
-import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.LoginStatusException;
 import lombok.RequiredArgsConstructor;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +20,7 @@ public class AuthentificationService {
     private final PasswordEncoder pe;
 
     @Transactional
-    public LoginResponse login(LoginRequest request, HttpSession session) {
+    public LoginResponse login(LoginRequest request) {
         Administrator admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 이메일")//에러 코드 추후 수정
         );
@@ -42,12 +40,10 @@ public class AuthentificationService {
             case NON_ACTIVE -> throw new LoginStatusException("비활성화된 계정입니다.");//에러 코드 추후 수정
         }
 
-        SessionAdmin sessionAdmin = new SessionAdmin(admin.getId(), admin.getEmail(), admin.getRole());
-        session.setAttribute("loginUser", sessionAdmin);
 
         return new LoginResponse(
                 admin.getId(),
-                admin.getName(),
+                admin.getEmail(),
                 admin.getRole(),
                 AuthStatus.LOGIN_SUCCESS
         );

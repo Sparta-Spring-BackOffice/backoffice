@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class SessionAdmin {
     private final Long id;
-    private final String name;
+    private final String email;
     private final AdminRole role;
 
-    public SessionAdmin(Long id, String name, AdminRole role) {
+    public SessionAdmin(Long id, String email, AdminRole role) {
         this.id = id;
-        this.name = name;
+        this.email = email;
         this.role = role;
     }
 }

@@ -9,13 +9,13 @@ import lombok.Getter;
 @Getter
 public class LoginResponse {
     private final Long id;
-    private final String name;
+    private final String email;
     private final AdminRole role;
     private final AuthStatus status;
 
-    public LoginResponse(Long id, String name, AdminRole role, AuthStatus status) {
+    public LoginResponse(Long id, String email, AdminRole role, AuthStatus status) {
         this.id = id;
-        this.name = name;
+        this.email = email;
         this.role = role;
         this.status = status;
     }
