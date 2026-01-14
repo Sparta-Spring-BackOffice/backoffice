@@ -7,6 +7,7 @@ import com.example.backoffice.authentification.consts.AuthStatus;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.exception.LoginStatusException;
+import com.example.backoffice.common.config.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
