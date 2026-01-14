@@ -14,9 +14,10 @@ public class GetProductResponse {
     private final Long stock;
     private final String status;
     private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
     private final Administrator admin;
 
-    public GetProductResponse(Long id, String name, String category, Long price, Long stock, String status, LocalDateTime createdAt, Administrator admin) {
+    public GetProductResponse(Long id, String name, String category, Long price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, Administrator admin) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -24,6 +25,7 @@ public class GetProductResponse {
         this.stock = stock;
         this.status = status;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.admin = admin;
     }
 }

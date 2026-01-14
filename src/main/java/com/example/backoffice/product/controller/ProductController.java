@@ -6,13 +6,13 @@ import com.example.backoffice.product.dto.GetProductResponse;
 import com.example.backoffice.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.print.Pageable;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +25,19 @@ public class ProductController {
     }
 
     @GetMapping("/admin/products")
-    public ResponseEntity<Page<GetProductResponse>> getAllProduct(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProduct(page, size));
+    public ResponseEntity<Page<GetProductResponse>> getAllProduct(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String status,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(defaultValue = "1") int page
+    )
+    {
+        Pageable converted = PageRequest.of(
+                page - 1,
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProduct(keyword, category, status, converted));
     }
 }

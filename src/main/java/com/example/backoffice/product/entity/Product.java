@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Getter
 @Entity
 @Table(name = "products")
@@ -17,7 +19,7 @@ public class Product extends BaseEntity {
     private Long id;
     private String name;
     private String category;
-    private Long price;
+    private BigDecimal price;
     private Long stock;
     private String status;
 
@@ -26,7 +28,7 @@ public class Product extends BaseEntity {
     private Administrator administrator;
 
 
-    public Product(String name, String category, Long price, Long stock, String status, Administrator administrator) {
+    public Product(String name, String category, BigDecimal price, Long stock, String status, Administrator administrator) {
         this.name = name;
         this.category = category;
         this.price = price;
