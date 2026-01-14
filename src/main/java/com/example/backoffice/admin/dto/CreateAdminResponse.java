@@ -14,7 +14,8 @@ public class CreateAdminResponse {
     private final String status;
     private final LocalDateTime createdAt;
 
-    public CreateAdminResponse(String code, String message, String name, String email, String phone, String role, String status, LocalDateTime createdAt) {
+
+    public CreateAdminResponse(String message, String name, String email, String phone, String role, String status, LocalDateTime createdAt) {
         this.message = message;
         this.name = name;
         this.email = email;
