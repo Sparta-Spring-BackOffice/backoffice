@@ -2,7 +2,6 @@ package com.example.backoffice.user.consts;
 
 import lombok.Getter;
 
-@Getter
 public enum UserStatus {
 
     // 서로 같은 값으로 수정
@@ -14,6 +13,10 @@ public enum UserStatus {
 
     UserStatus(String description) {
         this.description = description;
+    }
+
+    public String getStatus() {
+        return description;
     }
 
 }

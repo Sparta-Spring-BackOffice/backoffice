@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,17 +22,16 @@ public class UserController {
     @GetMapping("/admin/users")
     public ResponseEntity<Page<GetUserResponse>> getUsers(
             @RequestParam String keyword,
+            @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortOder,
             @RequestParam UserStatus status
     ) {
-        Sort sort = sortOder.equalsIgnoreCase("asc")
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Pageable converted = PageRequest.of(
+                page - 1,
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
 
-        return ResponseEntity.ok(userService.findAll(keyword, pageable, status));
+        return ResponseEntity.ok(userService.findAllUsers(keyword, converted, status));
     }
 }

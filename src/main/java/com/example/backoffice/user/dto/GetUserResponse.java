@@ -12,13 +12,15 @@ public class GetUserResponse {
     private final String phoneNumber;
     private final String status;
     private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
-    public GetUserResponse(Long id, String name, String email, String phoneNumber, String status, LocalDateTime createdAt) {
+    public GetUserResponse(Long id, String name, String email, String phoneNumber, String status, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.status = status;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 }
