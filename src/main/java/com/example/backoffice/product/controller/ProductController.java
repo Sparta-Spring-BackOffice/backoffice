@@ -26,9 +26,9 @@ public class ProductController {
 
     @GetMapping("/admin/products")
     public ResponseEntity<Page<GetProductResponse>> getAllProduct(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String status,
+            @RequestParam String keyword,
+            @RequestParam String category,
+            @RequestParam String status,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(defaultValue = "1") int page
     )
