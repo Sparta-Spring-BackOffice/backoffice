@@ -3,6 +3,7 @@ package com.example.backoffice.admin.controller;
 import com.example.backoffice.admin.dto.CreateAdminRequest;
 import com.example.backoffice.admin.dto.CreateAdminResponse;
 import com.example.backoffice.admin.dto.GetAdminResponse;
+import com.example.backoffice.admin.dto.GetOneAdminResponse;
 import com.example.backoffice.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -39,4 +40,11 @@ public class AdminController {
             @RequestBody CreateAdminRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
     }
+
+    @GetMapping("/admin/administrators/{administratorId}")
+    public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId){
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
+    }
+
+
 }
