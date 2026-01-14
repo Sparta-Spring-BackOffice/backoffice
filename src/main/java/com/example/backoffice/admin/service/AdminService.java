@@ -1,17 +1,15 @@
 package com.example.backoffice.admin.service;
 
-import com.example.backoffice.admin.dto.GetAdminResponse;
-import com.example.backoffice.admin.dto.GetOneAdminResponse;
+import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
-import com.example.backoffice.admin.dto.CreateAdminRequest;
-import com.example.backoffice.admin.dto.CreateAdminResponse;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.exception.ErrorCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
@@ -86,7 +84,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public GetOneAdminResponse getOneAdmin(Long administratorId) {
         Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
-                () -> AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
 
         return new GetOneAdminResponse(
@@ -98,6 +96,24 @@ public class AdminService {
                 administrator.getCreatedAt(),
                 administrator.getModifiedAt(),
                 administrator.getApprovedAt()
+        );
+    }
+
+    public UpdateAdminResponse updateAdmin(Long administratorId, UpdateAdminRequest request) {
+        Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        administrator.update(request.getName(), request.getEmail(), request.getPhone());
+
+        return new UpdateAdminResponse(
+                administrator.getName(),
+                administrator.getEmail(),
+                administrator.getPhone(),
+                administrator.getRole().getRoleName(),
+                administrator.getStatus().getStatusName(),
+                administrator.getCreatedAt(),
+                administrator.getModifiedAt()
         );
     }
 }

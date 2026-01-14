@@ -1,10 +1,8 @@
 package com.example.backoffice.admin.controller;
 
-import com.example.backoffice.admin.dto.CreateAdminRequest;
-import com.example.backoffice.admin.dto.CreateAdminResponse;
-import com.example.backoffice.admin.dto.GetAdminResponse;
-import com.example.backoffice.admin.dto.GetOneAdminResponse;
+import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +44,12 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
     }
 
+    @PutMapping("/admin/administrators/{administratorId}")
+    public ResponseEntity<UpdateAdminResponse> updateAdmin(
+            @PathVariable Long administratorId,
+            @Valid @RequestBody UpdateAdminRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(administratorId, request));
+    }
 
 }

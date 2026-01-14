@@ -42,4 +42,10 @@ public class Administrator extends BaseEntity {
         this.role = adminRole;
         this.status = adminStatus;
     }
+
+    public void update(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
 }
