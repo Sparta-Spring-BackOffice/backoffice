@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AuthStatus {
 
-    LOGIN_SUCCESS("Login 완료");
+    LOGIN_SUCCESS("Login 성공");
 
     private final String message;
 }
