@@ -1,13 +1,16 @@
 package com.example.backoffice.product.service;
 
 import com.example.backoffice.admin.entity.Administrator;
+import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.product.dto.CreateProductRequest;
 import com.example.backoffice.product.dto.CreateProductResponse;
+import com.example.backoffice.product.dto.GetOneProductResponse;
 import com.example.backoffice.product.dto.GetProductResponse;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public class ProductService {
     @Transactional
     public CreateProductResponse createProduct(CreateProductRequest request, Long adminId) {
         Administrator admin = adminRepository.findById(adminId).orElseThrow(
-                () -> new AdminNotFoundException("없는 관리자 입니다.")
+                () -> new AdminNotFoundException()
         );
         Product product = new Product(
                 request.getName(),
@@ -58,5 +61,23 @@ public class ProductService {
                 product.getModifiedAt(),
                 product.getAdministrator().getName()
         ));
+    }
+
+    public GetOneProductResponse findOneProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.")
+        );
+        return new GetOneProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getStatus(),
+                product.getCreatedAt(),
+                product.getModifiedAt(),
+                product.getAdministrator().getName(),
+                product.getAdministrator().getEmail()
+        );
     }
 }
