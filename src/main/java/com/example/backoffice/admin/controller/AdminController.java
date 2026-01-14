@@ -1,5 +1,7 @@
 package com.example.backoffice.admin.controller;
 
+import com.example.backoffice.admin.dto.CreateAdminRequest;
+import com.example.backoffice.admin.dto.CreateAdminResponse;
 import com.example.backoffice.admin.dto.GetAdminResponse;
 import com.example.backoffice.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,10 +32,11 @@ public class AdminController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword,role,status,converted));
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword, role, status, converted));
+    }
     @PostMapping("/admin/signup")
-    public ResponseEntity<CreateAdminResponse> signup (CreateAdminRequest request){
+    public ResponseEntity<CreateAdminResponse> signup (
+            @RequestBody CreateAdminRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
     }
 }

@@ -6,19 +6,17 @@ import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.dto.CreateAdminRequest;
 import com.example.backoffice.admin.dto.CreateAdminResponse;
-import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.config.PasswordEncoder;
+import com.example.backoffice.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import static com.example.backoffice.common.exception.ErrorCode.DUPLICATE_EMAIL;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class AdminService {
 
         Page<Administrator> findAdmins;
 
-        if (keyword.contains("@")){
+        if (keyword.contains("@")) {
             findAdmins = adminRepository.findByEmailKeyword(keyword, role, status, pageable);
         } else {
             findAdmins = adminRepository.findByNameKeyword(keyword, role, status, pageable);
@@ -43,7 +41,7 @@ public class AdminService {
                         administrator.getEmail(),
                         administrator.getPhone(),
                         administrator.getRole().getRoleName(),
-                        administrator.getStatus().getStatus(),
+                        administrator.getStatus().getStatusName(),
                         administrator.getCreatedAt(),
                         administrator.getModifiedAt(),
                         findAdmins.getNumber(),
@@ -51,12 +49,12 @@ public class AdminService {
                         findAdmins.getTotalElements(),
                         findAdmins.getTotalPages()
                 )).toList();
-
+    }
     @Transactional
     public CreateAdminResponse create(CreateAdminRequest request) {
         //이메일 중복 확인
         boolean duplicate = adminRepository.existsByEmail(request.getEmail());
-        if(duplicate) throw new EmailDuplicationException(DUPLICATE_EMAIL);
+        if(duplicate) throw new EmailDuplicationException(ErrorCode.DUPLICATE_EMAIL);
         //비밀번호 암호화 및 저장
         PasswordEncoder passwordEncoder = new PasswordEncoder();
         Administrator admin = new Administrator(

@@ -14,14 +14,14 @@ public enum AdminStatus {
     PENDING("PENDING"),
     DENIED("DENIED");
 
-    private final String status;
+    private final String statusName;
 
     public static AdminStatus getStatus(String status) {
         for (AdminStatus adminStatus : AdminStatus.values()) {
-            if (adminStatus.status.equals(status)) {
+            if (adminStatus.statusName.equals(status)) {
                 return adminStatus;
             }
         }
-        throw new NoSuchAdminStatus(ErrorCode.NO_SUCH_STATUS);
+        throw new NoSuchAdminStatusException(ErrorCode.NO_SUCH_STATUS);
     }
 }
