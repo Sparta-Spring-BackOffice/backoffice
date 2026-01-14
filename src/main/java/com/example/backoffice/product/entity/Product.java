@@ -1,10 +1,13 @@
 package com.example.backoffice.product.entity;
 
+import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.common.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Getter
 @Entity
@@ -16,15 +19,21 @@ public class Product extends BaseEntity {
     private Long id;
     private String name;
     private String category;
-    private Long price;
+    private BigDecimal price;
     private Long stock;
     private String status;
 
-    public Product(String name, String category, Long price, Long stock, String status) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Administrator administrator;
+
+
+    public Product(String name, String category, BigDecimal price, Long stock, String status, Administrator administrator) {
         this.name = name;
         this.category = category;
         this.price = price;
         this.stock = stock;
         this.status = status;
+        this.administrator = administrator;
     }
 }
