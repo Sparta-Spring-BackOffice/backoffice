@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "admins")
+@Table(name = "administrators")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin extends BaseEntity {
+public class Administrator extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Admin extends BaseEntity {
     private AdminStatus status;
     private DeclineReason declineFor;
 
-    public Admin(String name, String email, String password, String phone, AdminRole adminRole, AdminStatus adminStatus) {
+    public Administrator(String name, String email, String password, String phone, AdminRole adminRole, AdminStatus adminStatus) {
         this.name = name;
         this.email = email;
         this.password = password;
