@@ -2,6 +2,7 @@ package com.example.backoffice.product.controller;
 
 import com.example.backoffice.product.dto.CreateProductRequest;
 import com.example.backoffice.product.dto.CreateProductResponse;
+import com.example.backoffice.product.dto.GetOneProductResponse;
 import com.example.backoffice.product.dto.GetProductResponse;
 import com.example.backoffice.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +40,10 @@ public class ProductController {
                 pageable.getSort()
         );
         return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProduct(keyword, category, status, converted));
+    }
+
+    @GetMapping("/admin/products/{productId}")
+    public ResponseEntity<GetOneProductResponse> getOneProduct(Long productId) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findOneProduct(productId));
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface AdminRepository extends JpaRepository<Administrator, Long> {
 
     @Query("SELECT a FROM Administrator a " +
@@ -22,4 +24,5 @@ public interface AdminRepository extends JpaRepository<Administrator, Long> {
     Page<Administrator> findByNameKeyword(@Param("keyword") String keyword, @Param("role")String role, @Param("status") String status, Pageable pageable);
 
     boolean existsByEmail(String email);
+    Optional<Administrator> findByEmail(String email);
 }
