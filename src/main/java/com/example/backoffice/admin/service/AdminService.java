@@ -1,18 +1,22 @@
 package com.example.backoffice.admin.service;
 
 import com.example.backoffice.admin.dto.GetAdminResponse;
+import com.example.backoffice.admin.dto.GetOneAdminResponse;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.dto.CreateAdminRequest;
 import com.example.backoffice.admin.dto.CreateAdminResponse;
+import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +54,7 @@ public class AdminService {
                         findAdmins.getTotalPages()
                 )).toList();
     }
+
     @Transactional
     public CreateAdminResponse create(CreateAdminRequest request) {
         //이메일 중복 확인
@@ -74,6 +79,23 @@ public class AdminService {
                 admin.getRole().getRoleName(),
                 admin.getStatus().getStatusName(),
                 admin.getCreatedAt()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public GetOneAdminResponse getOneAdmin(Long administratorId) {
+        Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
+                () -> AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        return new GetOneAdminResponse(
+                administrator.getName(),
+                administrator.getEmail(),
+                administrator.getPhone(),
+                administrator.getRole().getRoleName(),
+                administrator.getStatus().getStatusName(),
+                administrator.getCreatedAt(),
+                administrator.getApprovedAt()
         );
     }
 }
