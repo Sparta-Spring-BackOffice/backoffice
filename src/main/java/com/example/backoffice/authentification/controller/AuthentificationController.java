@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class AuthentificationController {
     private final AuthentificationService authentificationService;
 
-    @PostMapping("/administrators/login")
+    @PostMapping("/admin/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request,
             HttpSession session,
