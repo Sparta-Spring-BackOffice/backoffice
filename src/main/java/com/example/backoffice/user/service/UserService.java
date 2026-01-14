@@ -4,10 +4,12 @@ import com.example.backoffice.common.exception.ErrorCode;
 import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.dto.GetOneUserResponse;
 import com.example.backoffice.user.dto.GetUserResponse;
+import com.example.backoffice.user.dto.UpdateUserRequest;
+import com.example.backoffice.user.dto.UpdateUserResponse;
 import com.example.backoffice.user.entity.User;
-import com.example.backoffice.user.exception.UserException;
 import com.example.backoffice.user.exception.UserNotFoundException;
 import com.example.backoffice.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +50,27 @@ public class UserService {
                 () -> new UserNotFoundException(ErrorCode.NO_SUCH_USER)
         );
         return new GetOneUserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getStatus().getStatus(),
+                user.getCreatedAt(),
+                user.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public UpdateUserResponse updateUser(Long userId, @Valid UpdateUserRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(ErrorCode.NO_SUCH_USER)
+        );
+        user.updateUser(
+                request.getName(),
+                request.getEmail(),
+                request.getPhoneNumber()
+        );
+        return new UpdateUserResponse(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
