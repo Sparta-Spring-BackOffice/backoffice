@@ -20,4 +20,6 @@ public interface AdminRepository extends JpaRepository<Administrator, Long> {
             " AND (:role IS NULL OR a.role = :role)" +
             " AND (:status Is NULL OR a.status = :status)")
     Page<Administrator> findByNameKeyword(@Param("keyword") String keyword, @Param("role")String role, @Param("status") String status, Pageable pageable);
+
+    boolean existsByEmail(String email);
 }
