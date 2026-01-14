@@ -27,8 +27,11 @@ public class Administrator extends BaseEntity {
     private String password;
     private String phone;
     private LocalDateTime approvedAt;
+    @Enumerated(EnumType.STRING)
     private AdminRole role;
+    @Enumerated(EnumType.STRING)
     private AdminStatus status;
+    @Enumerated(EnumType.STRING)
     private DeclineReason declineFor;
 
     public Administrator(String name, String email, String password, String phone, AdminRole adminRole, AdminStatus adminStatus) {
