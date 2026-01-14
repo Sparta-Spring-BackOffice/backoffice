@@ -34,5 +34,8 @@ public class AdminController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword,role,status,converted));
+    @PostMapping("/admin/signup")
+    public ResponseEntity<CreateAdminResponse> signup (CreateAdminRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
     }
 }
