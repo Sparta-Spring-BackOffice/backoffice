@@ -11,7 +11,6 @@ import com.example.backoffice.product.dto.GetProductResponse;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class ProductService {
     private final AdminRepository adminRepository;
 
     @Transactional
-    public CreateProductResponse createProduct(CreateProductRequest request, Long adminId) {
+    public CreateProductResponse createProduct(Long adminId, CreateProductRequest request) {
         Administrator admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
@@ -64,6 +63,7 @@ public class ProductService {
         ));
     }
 
+    @Transactional(readOnly = true)
     public GetOneProductResponse findOneProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품 입니다.")
