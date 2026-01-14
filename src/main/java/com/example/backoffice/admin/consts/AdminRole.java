@@ -1,6 +1,7 @@
 package com.example.backoffice.admin.consts;
 
 import com.example.backoffice.admin.exception.NoSuchAdminRoleException;
+import com.example.backoffice.common.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,6 +18,6 @@ public enum AdminRole {
                 return role;
             }
         }
-        throw new NoSuchAdminRoleException();
+        throw new NoSuchAdminRoleException(ErrorCode.NO_SUCH_ROLE);
     }
 }

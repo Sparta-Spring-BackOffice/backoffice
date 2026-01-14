@@ -1,7 +1,10 @@
 package com.example.backoffice.admin.exception;
 
+import com.example.backoffice.common.exception.ErrorCode;
+import org.springframework.http.HttpStatus;
+
 public class NoSuchAdminRoleException extends AdminException {
-    public NoSuchAdminRoleException(String message) {
-        super(message);
+    public NoSuchAdminRoleException(ErrorCode errorCode) {
+        super(HttpStatus.BAD_REQUEST, errorCode);
     }
 }
