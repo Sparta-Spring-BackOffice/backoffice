@@ -1,17 +1,42 @@
 package com.example.backoffice.admin.entity;
 
+import com.example.backoffice.admin.consts.AdminRole;
+import com.example.backoffice.admin.consts.AdminStatus;
+import com.example.backoffice.admin.consts.DeclineReason;
+import com.example.backoffice.common.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "admins")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin {
+public class Admin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
+    @Column(unique = true)
+    private String email;
+    private String password;
+    private String phone;
+    private LocalDateTime approvedAt;
+    private AdminRole role;
+    private AdminStatus status;
+    private DeclineReason declineFor;
+
+    public Admin(String name, String email, String password, String phone, AdminRole adminRole, AdminStatus adminStatus) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.role = adminRole;
+        this.status = adminStatus;
+    }
 }
