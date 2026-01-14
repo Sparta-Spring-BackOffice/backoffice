@@ -95,6 +95,7 @@ public class AdminService {
                 administrator.getRole().getRoleName(),
                 administrator.getStatus().getStatusName(),
                 administrator.getCreatedAt(),
+                administrator.getModifiedAt(),
                 administrator.getApprovedAt()
         );
     }

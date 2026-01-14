@@ -12,15 +12,17 @@ public class GetOneAdminResponse {
     private final String role;
     private final String status;
     private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
     private final LocalDateTime approvedAt;
 
-    public GetOneAdminResponse(String name, String email, String phone, String role, String status, LocalDateTime createdAt, LocalDateTime approvedAt) {
+    public GetOneAdminResponse(String name, String email, String phone, String role, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime approvedAt) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.role = role;
         this.status = status;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.approvedAt = approvedAt;
     }
 }
