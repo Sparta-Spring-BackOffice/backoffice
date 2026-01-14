@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CreateProductResponse {
+public class GetProductResponse {
     private final Long id;
     private final String name;
     private final String category;
@@ -14,8 +14,9 @@ public class CreateProductResponse {
     private final Long stock;
     private final String status;
     private final LocalDateTime createdAt;
+    private final Administrator admin;
 
-    public CreateProductResponse(Long id, String name, String category, Long price, Long stock, String status, LocalDateTime createdAt) {
+    public GetProductResponse(Long id, String name, String category, Long price, Long stock, String status, LocalDateTime createdAt, Administrator admin) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -23,5 +24,6 @@ public class CreateProductResponse {
         this.stock = stock;
         this.status = status;
         this.createdAt = createdAt;
+        this.admin = admin;
     }
 }
