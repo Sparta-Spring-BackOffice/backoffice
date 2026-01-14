@@ -1,8 +1,6 @@
 package com.example.backoffice.product.dto;
 
-import com.example.backoffice.admin.entity.Administrator;
 import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,9 +14,9 @@ public class GetProductResponse {
     private final String status;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
-    private final Administrator admin;
+    private final String adminName;
 
-    public GetProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, Administrator admin) {
+    public GetProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String adminName) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -27,6 +25,6 @@ public class GetProductResponse {
         this.status = status;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.admin = admin;
+        this.adminName = adminName;
     }
 }

@@ -41,7 +41,6 @@ public class ProductService {
                 savedProduct.getStock(),
                 savedProduct.getStatus(),
                 savedProduct.getCreatedAt()
-
         );
     }
 
