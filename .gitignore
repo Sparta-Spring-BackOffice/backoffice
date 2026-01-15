@@ -4,7 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-src/main/resources/application.properties
+#프로젝트 최종 제출 시 해제
+#src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
