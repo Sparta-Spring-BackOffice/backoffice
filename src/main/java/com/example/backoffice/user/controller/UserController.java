@@ -1,10 +1,7 @@
 package com.example.backoffice.user.controller;
 
 import com.example.backoffice.user.consts.UserStatus;
-import com.example.backoffice.user.dto.GetOneUserResponse;
-import com.example.backoffice.user.dto.GetUserResponse;
-import com.example.backoffice.user.dto.UpdateUserRequest;
-import com.example.backoffice.user.dto.UpdateUserResponse;
+import com.example.backoffice.user.dto.*;
 import com.example.backoffice.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +45,13 @@ public class UserController {
             @Valid @RequestBody UpdateUserRequest request
     ){
         return ResponseEntity.ok(userService.updateUser(userId, request));
+    }
+
+    @PutMapping("/admin/users/{userId}")
+    public ResponseEntity<UpdateUserResponse> updateUserStatus(
+            @PathVariable Long userId,
+            @Valid @RequestBody UpdateUserStatusRequest request
+    ){
+        return ResponseEntity.ok(userService.updateUserStatus(userId, request));
     }
 }
