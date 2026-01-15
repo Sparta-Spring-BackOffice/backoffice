@@ -112,7 +112,7 @@ public class AdminController {
     }
     //관리자 삭제
     @DeleteMapping("/admin/administrators/delete/{administratorId}")
-    public ResponseEntity<Void> deleteAdminStatus(
+    public ResponseEntity<Void> deleteAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId
     ){
