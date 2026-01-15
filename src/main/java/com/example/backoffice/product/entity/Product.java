@@ -50,7 +50,9 @@ public class Product extends BaseEntity {
 
     public void updateStock(Long stock) {
         this.stock = stock;
-
+        if (status == ProductStatus.DISCONTINUED) {
+            return;
+        }
         if (stock <= 0) {
             this.status = ProductStatus.SOLD_OUT;
         } else {

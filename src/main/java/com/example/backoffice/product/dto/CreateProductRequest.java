@@ -1,5 +1,6 @@
 package com.example.backoffice.product.dto;
 
+import com.example.backoffice.product.consts.ProductStatus;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -10,6 +11,6 @@ public class CreateProductRequest {
     private String category;
     private BigDecimal price;
     private Long stock;
-    private String status;
+    private ProductStatus status;
 
 }

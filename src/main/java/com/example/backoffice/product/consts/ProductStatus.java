@@ -1,5 +1,8 @@
 package com.example.backoffice.product.consts;
 
+import lombok.Getter;
+
+@Getter
 public enum ProductStatus {
     FOR_SALE("FOR_SALE"),
     SOLD_OUT("SOLD_OUT"),
@@ -10,7 +13,7 @@ public enum ProductStatus {
     ProductStatus(String statusName) {
         this.statusName = statusName;
     }
-    public String getStatusName() {
+    public String StatusName() {
         return statusName;
     }
 }

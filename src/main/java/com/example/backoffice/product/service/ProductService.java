@@ -25,11 +25,14 @@ public class ProductService {
         Administrator admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
+        productStatus = request.getStatus();
 
-        if (request.getStock() <= 0) {
-            productStatus = ProductStatus.SOLD_OUT;
-        } else {
-            productStatus = ProductStatus.FOR_SALE;
+        if (productStatus != ProductStatus.DISCONTINUED) {
+            if(request.getStock() <= 0) {
+                productStatus = ProductStatus.SOLD_OUT;
+            } else {
+                productStatus = ProductStatus.FOR_SALE;
+            }
         }
 
         Product product = new Product(
