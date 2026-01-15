@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,5 +54,11 @@ public class UserController {
             @Valid @RequestBody UpdateUserStatusRequest request
     ){
         return ResponseEntity.ok(userService.updateUserStatus(userId, request));
+    }
+
+    @DeleteMapping("/admin/users/{userId}")
+    public ResponseEntity<Void> deleteUser( @PathVariable Long userId) {
+        userService.delete(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
