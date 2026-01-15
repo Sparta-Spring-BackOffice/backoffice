@@ -1,7 +1,6 @@
 package com.example.backoffice.product.dto;
 
 import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,7 +12,6 @@ public class UpdateProductInfoResponse {
     private final BigDecimal price;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
-
 
     public UpdateProductInfoResponse(Long id, String name, String category, BigDecimal price, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
