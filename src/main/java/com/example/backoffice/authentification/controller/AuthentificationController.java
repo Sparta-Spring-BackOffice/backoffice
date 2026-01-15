@@ -5,6 +5,7 @@ import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
+import com.example.backoffice.authentification.exception.NotLoginException;
 import com.example.backoffice.authentification.service.AuthentificationService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class AuthentificationController {
             HttpSession session
     ){
         if(sessionAdmin == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
         }
         session.invalidate();
 
