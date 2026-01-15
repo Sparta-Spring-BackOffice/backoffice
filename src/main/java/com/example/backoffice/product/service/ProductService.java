@@ -9,6 +9,7 @@ import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,24 @@ public class ProductService {
 
         product.updateStock(request.getStock());
         return new UpdateProductStockResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getStock(),
+                product.getStatus().getStatusName(),
+                product.getCreatedAt(),
+                product.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public UpdateProductStatusResponse updateProductStatus(UpdateProductStatusRequest request, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+        );
+
+        product.updateStatus(request.getStatus());
+        return new UpdateProductStatusResponse(
                 product.getId(),
                 product.getName(),
                 product.getCategory(),
