@@ -26,14 +26,21 @@ public class ProductService {
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
 
+        if (request.getStock() <= 0) {
+            productStatus = ProductStatus.SOLD_OUT;
+        } else {
+            productStatus = ProductStatus.FOR_SALE;
+        }
+
         Product product = new Product(
                 request.getName(),
                 request.getCategory(),
                 request.getPrice(),
                 request.getStock(),
-                ProductStatus.FOR_SALE,
+                productStatus,
                 admin
         );
+
         Product savedProduct = productRepository.save(product);
         return new CreateProductResponse(
                 savedProduct.getId(),
