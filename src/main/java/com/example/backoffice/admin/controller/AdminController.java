@@ -84,4 +84,12 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/admin/profile")
+    public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
+        if(loginAdmin == null){
+            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
+    }
 }
