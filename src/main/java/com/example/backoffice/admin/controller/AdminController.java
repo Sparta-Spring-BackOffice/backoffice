@@ -4,8 +4,7 @@ import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
-import com.example.backoffice.authentification.exception.NotLoginException;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.authentification.exception.UnauthorizedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -64,7 +63,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
         if(loginAdmin == null){
-            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
 
         adminService.rejectAdmin(request, loginAdmin.getId(), administratorId );
@@ -77,7 +76,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
         if(loginAdmin == null){
-            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
 
         adminService.approveAdmin(loginAdmin.getId(), administratorId );
@@ -88,8 +87,20 @@ public class AdminController {
     public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
         if(loginAdmin == null){
-            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
+    }
+
+    @PutMapping("/admin/profile")
+    public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @Valid @RequestBody UpdateAdminPasswordRequest request
+    ){
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
     }
 }

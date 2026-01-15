@@ -8,8 +8,11 @@ import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
 import com.example.backoffice.admin.exception.InsufficientRoleException;
 import com.example.backoffice.admin.repository.AdminRepository;
+import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.exception.InvalidRequestException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
@@ -25,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<GetAdminResponse> getAllAdmins(String keyword, String role, String status, Pageable pageable) {
@@ -107,6 +111,8 @@ public class AdminService {
 
         administrator.update(request.getName(), request.getEmail(), request.getPhone());
 
+        adminRepository.flush();
+
         return new UpdateAdminResponse(
                 administrator.getName(),
                 administrator.getEmail(),
@@ -162,6 +168,36 @@ public class AdminService {
                 findAdmin.getName(),
                 findAdmin.getEmail(),
                 findAdmin.getPhone()
+        );
+    }
+
+    @Transactional
+    public UpdateAdminPasswordResponse updateAdminPassword(Long id, UpdateAdminPasswordRequest request) {
+        Administrator administrator = adminRepository.findById(id).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), administrator.getPassword())) {
+            throw new UnauthorizedException(AuthErrorCode.PASSWORD_MISMATCH_ERROR);
+        }
+
+        if (!request.getNewPassword().equals(request.getNewPasswordConfirm())) {
+            throw new InvalidRequestException(ErrorCode.PASSWORD_CONFIRM_MISMATCH_ERROR);
+        }
+
+        administrator.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+
+        adminRepository.flush();
+
+        return new UpdateAdminPasswordResponse(
+                administrator.getId(),
+                administrator.getName(),
+                administrator.getEmail(),
+                administrator.getPhone(),
+                administrator.getRole().getRoleName(),
+                administrator.getStatus().getStatusName(),
+                administrator.getCreatedAt(),
+                administrator.getModifiedAt()
         );
     }
 }

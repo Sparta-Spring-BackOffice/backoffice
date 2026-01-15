@@ -58,4 +58,8 @@ public class Administrator extends BaseEntity {
         status = AdminStatus.DENIED;
         declineFor = declineReason;
     }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

@@ -5,6 +5,7 @@ import com.example.backoffice.admin.exception.AdminException;
 import com.example.backoffice.authentification.exception.AuthentificationException;
 import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.common.dto.ErrorResponse;
+import com.example.backoffice.common.exception.CommonException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,12 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(e.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(CommonException.class)
+    public ResponseEntity<ErrorResponse> CommonExceptionHandler(CommonException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
+        return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
 
 }
