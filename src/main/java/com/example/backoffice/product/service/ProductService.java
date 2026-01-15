@@ -4,6 +4,7 @@ import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
@@ -20,18 +21,29 @@ public class ProductService {
     private final AdminRepository adminRepository;
 
     @Transactional
-    public CreateProductResponse createProduct(Long adminId, CreateProductRequest request) {
+    public CreateProductResponse createProduct(Long adminId, CreateProductRequest request, ProductStatus productStatus) {
         Administrator admin = adminRepository.findById(adminId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
+        productStatus = request.getStatus();
+
+        if (productStatus != ProductStatus.DISCONTINUED) {
+            if(request.getStock() <= 0) {
+                productStatus = ProductStatus.SOLD_OUT;
+            } else {
+                productStatus = ProductStatus.FOR_SALE;
+            }
+        }
+
         Product product = new Product(
                 request.getName(),
                 request.getCategory(),
                 request.getPrice(),
                 request.getStock(),
-                request.getStatus(),
+                productStatus,
                 admin
         );
+
         Product savedProduct = productRepository.save(product);
         return new CreateProductResponse(
                 savedProduct.getId(),
@@ -39,13 +51,13 @@ public class ProductService {
                 savedProduct.getCategory(),
                 savedProduct.getPrice(),
                 savedProduct.getStock(),
-                savedProduct.getStatus(),
+                savedProduct.getStatus().getStatusName(),
                 savedProduct.getCreatedAt()
         );
     }
 
     @Transactional(readOnly = true)
-    public Page<GetProductResponse> findAllProduct(String keyword, String category, String status, Pageable pageable) {
+    public Page<GetProductResponse> findAllProduct(String keyword, String category, ProductStatus status, Pageable pageable) {
         Page<Product> products = productRepository.findAllProducts(keyword, category, status, pageable);
         return products.map(product ->  new GetProductResponse(
                 product.getId(),
@@ -53,7 +65,7 @@ public class ProductService {
                 product.getCategory(),
                 product.getPrice(),
                 product.getStock(),
-                product.getStatus(),
+                product.getStatus().getStatusName(),
                 product.getCreatedAt(),
                 product.getModifiedAt(),
                 product.getAdministrator().getName()
@@ -71,7 +83,7 @@ public class ProductService {
                 product.getCategory(),
                 product.getPrice(),
                 product.getStock(),
-                product.getStatus(),
+                product.getStatus().getStatusName(),
                 product.getCreatedAt(),
                 product.getModifiedAt(),
                 product.getAdministrator().getName(),
@@ -96,6 +108,7 @@ public class ProductService {
         );
     }
 
+    @Transactional
     public UpdateProductStockResponse updateProductStock(UpdateProductStockRequest request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
@@ -107,7 +120,7 @@ public class ProductService {
                 product.getName(),
                 product.getCategory(),
                 product.getStock(),
-                product.getStatus(),
+                product.getStatus().getStatusName(),
                 product.getCreatedAt(),
                 product.getModifiedAt()
         );

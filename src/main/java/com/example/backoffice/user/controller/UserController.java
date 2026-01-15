@@ -47,11 +47,17 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, request));
     }
 
-    @PutMapping("/admin/users/{userId}/status")
+    @PutMapping("/admin/users/{userId}")
     public ResponseEntity<UpdateUserResponse> updateUserStatus(
             @PathVariable Long userId,
             @Valid @RequestBody UpdateUserStatusRequest request
     ){
         return ResponseEntity.ok(userService.updateUserStatus(userId, request));
+    }
+
+    @DeleteMapping("/admin/users/{userId}")
+    public ResponseEntity<Void> deleteUser( @PathVariable Long userId) {
+        userService.delete(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
