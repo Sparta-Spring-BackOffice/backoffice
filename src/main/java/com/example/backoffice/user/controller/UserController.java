@@ -21,10 +21,10 @@ public class UserController {
 
     @GetMapping("/admin/users")
     public ResponseEntity<Page<GetUserResponse>> getUsers(
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam UserStatus status
+            @RequestParam(required = false) UserStatus status
     ) {
         Pageable converted = PageRequest.of(
                 page - 1,

@@ -22,12 +22,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<GetUserResponse> findAllUsers(String keyword, Pageable pageable, UserStatus status) {
 
+        // 빈 문자열(keyword)을 null로 바꾸기 위함
+        String searchKeyword = (keyword == null || keyword.isEmpty()) ? null : keyword;
+
         Page<User> users;
 
-        if (keyword.contains("@")) {
-            users = userRepository.findByEmailKeyword(keyword,pageable,status);
+        if (searchKeyword != null && searchKeyword.contains("@")) {
+            users = userRepository.findByEmailKeyword(searchKeyword,pageable,status);
         } else {
-            users = userRepository.findByNameKeyword(keyword,pageable,status);
+            users = userRepository.findByNameKeyword(searchKeyword,pageable,status);
         }
 
         return users.map(user -> new GetUserResponse(
