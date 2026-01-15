@@ -13,8 +13,4 @@ public class LoginDeniedException extends AuthentificationException {
         super(HttpStatus.UNAUTHORIZED, authErrorCode);
         this.declineReason = declineReason;
     }
-
-    public DeclineReason getDeclineReason() {
-        return declineReason;
-    }
 }
