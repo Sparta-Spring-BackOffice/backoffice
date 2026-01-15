@@ -1,7 +1,9 @@
 package com.example.backoffice.order.entity;
 
 import com.example.backoffice.common.config.BaseEntity;
+import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.product.entity.Product;
+import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,6 +23,9 @@ public class Order extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String orderNumber;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -29,8 +34,9 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Order(String orderNumber, User user, Product product) {
+    public Order(String orderNumber, OrderStatus status, User user, Product product) {
         this.orderNumber = orderNumber;
+        this.status = status;
         this.user = user;
         this.product = product;
     }
