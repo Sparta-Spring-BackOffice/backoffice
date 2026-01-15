@@ -5,12 +5,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class DeniedLoginFailException extends AuthentificationException {
+public class LoginDeniedException extends AuthentificationException {
 
     private final DeclineReason declineReason;
 
-    public DeniedLoginFailException(AuthErrorCode authErrorCode, DeclineReason declineReason) {
+    public LoginDeniedException(AuthErrorCode authErrorCode, DeclineReason declineReason) {
         super(HttpStatus.UNAUTHORIZED, authErrorCode);
         this.declineReason = declineReason;
+    }
+
+    public DeclineReason getDeclineReason() {
+        return declineReason;
     }
 }

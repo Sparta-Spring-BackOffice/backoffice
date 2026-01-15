@@ -7,7 +7,7 @@ import com.example.backoffice.authentification.consts.AuthStatus;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
-import com.example.backoffice.authentification.exception.DeniedLoginFailException;
+import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AuthentificationService {
             case ACTIVE -> { /* OK */ }
             case PENDING -> throw new LoginFailException(AuthErrorCode.LOGIN_PENDING_ERROR);
             case DENIED -> {
-                throw new DeniedLoginFailException(AuthErrorCode.LOGIN_DENIED_ERROR, admin.getDeclineFor());//사유 추가 해야함
+                throw new LoginDeniedException(AuthErrorCode.LOGIN_DENIED_ERROR, admin.getDeclineFor());
             }
             case SUSPENDED -> throw new LoginFailException(AuthErrorCode.LOGIN_SUSPENDED_ERROR);
             case NON_ACTIVE -> throw new LoginFailException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
