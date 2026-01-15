@@ -2,6 +2,10 @@ package com.example.backoffice.admin.controller;
 
 import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.service.AdminService;
+import com.example.backoffice.authentification.dto.SessionAdmin;
+import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.NotLoginException;
+import com.example.backoffice.common.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +37,7 @@ public class AdminController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword, role, status, converted));
     }
+
     @PostMapping("/admin/signup")
     public ResponseEntity<CreateAdminResponse> signup (
             @Valid @RequestBody CreateAdminRequest request){
@@ -40,7 +45,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/administrators/{administratorId}")
-    public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId){
+    public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
     }
 
@@ -50,6 +55,33 @@ public class AdminController {
             @Valid @RequestBody UpdateAdminRequest request
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(administratorId, request));
+    }
+
+    @PutMapping("/admin/administrators/{administratorId}/reject")
+    public ResponseEntity<Void> rejectAdmin(
+            @Valid @RequestBody RejectAdminRequest request,
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        adminService.rejectAdmin(request, loginAdmin.getId(), administratorId );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/admin/administrators/{administratorId}/approve")
+    public ResponseEntity<Void> approveAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        adminService.approveAdmin(loginAdmin.getId(), administratorId );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

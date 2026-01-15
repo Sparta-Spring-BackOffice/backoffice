@@ -6,6 +6,7 @@ import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
+import com.example.backoffice.admin.exception.InsufficientRoleException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.exception.ErrorCode;
@@ -98,6 +99,7 @@ public class AdminService {
         );
     }
 
+    @Transactional
     public UpdateAdminResponse updateAdmin(Long administratorId, UpdateAdminRequest request) {
         Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
@@ -114,5 +116,39 @@ public class AdminService {
                 administrator.getCreatedAt(),
                 administrator.getModifiedAt()
         );
+    }
+
+    @Transactional
+    public void rejectAdmin(RejectAdminRequest request, Long loginId, Long targetId) {
+        Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new InsufficientRoleException(ErrorCode.INSUFFICIENT_ADMIN_ROLE);
+        }
+
+        Administrator targetAdmin = adminRepository.findById(targetId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        targetAdmin.deniedAdmin(request.getDeclineReason());
+    }
+
+    @Transactional
+    public void approveAdmin(Long loginId, Long targetId) {
+        Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new InsufficientRoleException(ErrorCode.INSUFFICIENT_ADMIN_ROLE);
+        }
+
+        Administrator targetAdmin = adminRepository.findById(targetId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        targetAdmin.activeAdmin();
     }
 }

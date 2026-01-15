@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class AdminNotFoundException extends AdminException {
     public AdminNotFoundException(ErrorCode errorCode) {
-        super(HttpStatus.BAD_REQUEST, errorCode);
+        super(HttpStatus.NOT_FOUND, errorCode);
     }
 }
