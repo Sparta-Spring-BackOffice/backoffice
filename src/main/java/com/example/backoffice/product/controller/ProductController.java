@@ -25,7 +25,7 @@ public class ProductController {
     @PostMapping("/admin/products")
     public ResponseEntity<CreateProductResponse> createProduct(@SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
         if (sessionAdmin == null) {
-            throw new LoginFailException(AuthErrorCode.LOGIN_DENIED_ERROR);
+            throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(sessionAdmin.getId(), request, productStatus));
     }
