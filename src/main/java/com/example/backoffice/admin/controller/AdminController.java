@@ -24,9 +24,9 @@ public class AdminController {
 
     @GetMapping("/admin/administrators")
     public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
-            @RequestParam String keyword,
-            @RequestParam String role,
-            @RequestParam String status,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page
     ) {

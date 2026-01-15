@@ -12,13 +12,13 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Administrator, Long> {
 
     @Query("SELECT a FROM Administrator a " +
-            "WHERE (:keyword IS NULL OR a.email = :keyword)" +
+            "WHERE (:keyword IS NULL OR a.email LIKE %:keyword%)" +
             " AND (:role IS NULL OR a.role = :role)" +
             " AND (:status Is NULL OR a.status = :status)")
     Page<Administrator> findByEmailKeyword(@Param("keyword") String keyword, @Param("role")String role, @Param("status") String status, Pageable pageable);
 
     @Query("SELECT a FROM Administrator a " +
-            "WHERE (:keyword IS NULL OR a.name = :keyword)" +
+            "WHERE (:keyword IS NULL OR a.name like %:keyword%)" +
             " AND (:role IS NULL OR a.role = :role)" +
             " AND (:status Is NULL OR a.status = :status)")
     Page<Administrator> findByNameKeyword(@Param("keyword") String keyword, @Param("role")String role, @Param("status") String status, Pageable pageable);

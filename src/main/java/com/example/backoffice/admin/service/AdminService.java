@@ -35,7 +35,11 @@ public class AdminService {
 
         Page<Administrator> findAdmins;
 
-        if (keyword.contains("@")) {
+        if(keyword.isEmpty()){
+            keyword = null;
+        }
+
+        if (keyword != null && keyword.contains("@")) {
             findAdmins = adminRepository.findByEmailKeyword(keyword, role, status, pageable);
         } else {
             findAdmins = adminRepository.findByNameKeyword(keyword, role, status, pageable);
