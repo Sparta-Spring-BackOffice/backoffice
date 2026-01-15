@@ -1,7 +1,6 @@
 package com.example.backoffice.product.dto;
 
 import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
