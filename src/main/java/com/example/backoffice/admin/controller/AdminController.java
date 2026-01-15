@@ -92,4 +92,31 @@ public class AdminController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
     }
+
+    //관리자 상태 변경
+    @PutMapping("/admin/administrators/status/{administratorId}")
+    public ResponseEntity<UpdateAdminStatusResponse> updateAdminStatus(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody updateAdminStatusRequest request)
+    {
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(loginAdmin, request));
+    }
+    //관리자 역할 변경
+    @PutMapping("/admin/administrators/role/{administratorId}")
+    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody updateAdminRoleRequest request){
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin, request));
+    }
+    //관리자 삭제
+    @DeleteMapping("/admin/administrators/delete/{administratorId}")
+    public ResponseEntity<Void> deleteAdminStatus(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId
+    ){
+    adminService.delete(administratorId);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
