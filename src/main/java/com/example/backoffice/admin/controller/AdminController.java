@@ -93,16 +93,30 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
     }
 
-    @PutMapping("/admin/profile")
+    @PutMapping("/admin/profile/password")
     public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @Valid @RequestBody UpdateAdminPasswordRequest request
-    ){
-        if(loginAdmin == null){
+    ) {
+        if (loginAdmin == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
+
+    }
+
+    @PutMapping("/admin/profile")
+    public ResponseEntity<UpdateAdminResponse> updateAdmin(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @Valid @RequestBody UpdateAdminRequest request
+    ) {
+        if (loginAdmin == null) {
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(loginAdmin.getId(), request));
+    }
 
     //관리자 상태 변경
     @PutMapping("/admin/administrators/status/{administratorId}")
