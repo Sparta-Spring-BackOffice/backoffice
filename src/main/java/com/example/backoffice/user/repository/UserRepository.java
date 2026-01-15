@@ -9,13 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
+    // LIKE %:% = 정확히 일치하지 않고 단어가 포함되면 검색
     @Query(value = "SELECT u FROM User u " +
-            "WHERE (:keyword IS NULL OR u.email = :keyword) " +
+            "WHERE (:keyword IS NULL OR u.email LIKE %:keyword%) " +
             "AND (:status IS NULL OR u.status = :status)")
     Page<User> findByEmailKeyword(String keyword, Pageable pageable, UserStatus status);
 
     @Query(value = "SELECT u FROM User u " +
-            "WHERE (:keyword IS NULL OR u.name = :keyword) " +
+            "WHERE (:keyword IS NULL OR u.name LIKE %:keyword%) " +
             "AND (:status IS NULL OR u.status = :status)")
     Page<User> findByNameKeyword(String keyword, Pageable pageable, UserStatus status);
 

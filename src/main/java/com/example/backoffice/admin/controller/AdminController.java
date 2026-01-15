@@ -4,8 +4,8 @@ import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.authentification.exception.NotLoginException;
-import com.example.backoffice.common.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -64,7 +64,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
         if(loginAdmin == null){
-            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
 
         adminService.rejectAdmin(request, loginAdmin.getId(), administratorId );
@@ -77,11 +77,57 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
         if(loginAdmin == null){
-            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
 
         adminService.approveAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/admin/profile")
+    public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
+    }
+
+    @PutMapping("/admin/profile")
+    public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @Valid @RequestBody UpdateAdminPasswordRequest request
+    ){
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
+
+    //관리자 상태 변경
+    @PutMapping("/admin/administrators/status/{administratorId}")
+    public ResponseEntity<UpdateAdminStatusResponse> updateAdminStatus(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody updateAdminStatusRequest request)
+    {
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(loginAdmin.getId(), administratorId, request));
+    }
+    //관리자 역할 변경
+    @PutMapping("/admin/administrators/role/{administratorId}")
+    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody updateAdminRoleRequest request){
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
+    }
+    //관리자 삭제
+    @DeleteMapping("/admin/administrators/delete/{administratorId}")
+    public ResponseEntity<Void> deleteAdmin(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId
+    ){
+    adminService.delete(loginAdmin.getId(), administratorId);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

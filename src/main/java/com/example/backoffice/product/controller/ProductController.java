@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/admin/products") // Valid 수정 예정
-    public ResponseEntity<CreateProductResponse> createProduct(@Valid @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @RequestBody CreateProductRequest request, ProductStatus productStatus){
+    @PostMapping("/admin/products")
+    public ResponseEntity<CreateProductResponse> createProduct(@SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
         if (sessionAdmin == null) {
-            throw new LoginFailException(AuthErrorCode.LOGIN_DENIED_ERROR);
+            throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(sessionAdmin.getId(), request, productStatus));
     }
@@ -53,18 +53,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findOneProduct(productId));
     }
 
-    @PutMapping("/admin/products/{productId}") // Valid 수정 예정
-    public ResponseEntity<UpdateProductInfoResponse> updateProduct(@RequestBody UpdateProductInfoRequest request, @PathVariable Long productId) {
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<UpdateProductInfoResponse> updateProduct(@Valid @RequestBody UpdateProductInfoRequest request, @PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductInfo(request, productId));
     }
 
-    @PutMapping("/admin/products/stock/{productId}") // Valid 수정 예정
-    public ResponseEntity<UpdateProductStockResponse> updateProductStock(@RequestBody UpdateProductStockRequest request, @PathVariable Long productId) {
+    @PutMapping("/admin/products/stock/{productId}")
+    public ResponseEntity<UpdateProductStockResponse> updateProductStock(@Valid @RequestBody UpdateProductStockRequest request, @PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStock(request, productId));
     }
 
     @PutMapping("/admin/products/status/{productId}")
-    public ResponseEntity<UpdateProductStatusResponse> updateProductStatus(@RequestBody UpdateProductStatusRequest request, @PathVariable Long productId) {
+    public ResponseEntity<UpdateProductStatusResponse> updateProductStatus(@Valid @RequestBody UpdateProductStatusRequest request, @PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStatus(request, productId));
     }
 

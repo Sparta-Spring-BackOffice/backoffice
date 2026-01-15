@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class NotLoginException extends AuthentificationException {
-    public NotLoginException(AuthErrorCode authErrorCode) {
+public class UnauthorizedException extends AuthentificationException {
+    public UnauthorizedException(AuthErrorCode authErrorCode) {
         super(HttpStatus.UNAUTHORIZED, authErrorCode);
     }
 }
