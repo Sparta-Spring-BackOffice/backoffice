@@ -17,7 +17,9 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
+
+    @Column(unique = true, nullable = false)
+    private String orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,8 +29,8 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Order(Long orderId, User user, Product product) {
-        this.orderId = orderId;
+    public Order(String orderNumber, User user, Product product) {
+        this.orderNumber = orderNumber;
         this.user = user;
         this.product = product;
     }
