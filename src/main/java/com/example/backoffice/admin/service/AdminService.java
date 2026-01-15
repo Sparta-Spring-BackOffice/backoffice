@@ -119,7 +119,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void processAdminRequest(RejectAdminRequest request, Long loginId, Long targetId) {
+    public void rejectAdmin(RejectAdminRequest request, Long loginId, Long targetId) {
         Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
@@ -132,10 +132,23 @@ public class AdminService {
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
 
-        if (request == null) {
-            targetAdmin.activeAdmin();
-        } else {
-            targetAdmin.deniedAdmin(request.getDeclineReason());
+        targetAdmin.deniedAdmin(request.getDeclineReason());
+    }
+
+    @Transactional
+    public void approveAdmin(Long loginId, Long targetId) {
+        Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
+            throw new InsufficientRoleException(ErrorCode.INSUFFICIENT_ADMIN_ROLE);
         }
+
+        Administrator targetAdmin = adminRepository.findById(targetId).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        targetAdmin.activeAdmin();
     }
 }

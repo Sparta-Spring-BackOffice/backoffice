@@ -57,12 +57,9 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(administratorId, request));
     }
 
-    // 테스트시 {} 빈 json을 넘겨줄 경우 null 취급이 아니라 Validation 검증에 걸림
-    // {} 가 아니라 다 지우고 요청을 보내야 관리자 요청 승인
-    // {"declineReason": "TIME_OUT"} 보내면 관리자 요청 거절
-    @PutMapping("/admin/administrators/{administratorId}/status")
-    public ResponseEntity<Void> processAdminRequest(
-            @Valid @RequestBody(required = false) RejectAdminRequest request,
+    @PutMapping("/admin/administrators/{administratorId}/reject")
+    public ResponseEntity<Void> rejectAdmin(
+            @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
@@ -70,7 +67,20 @@ public class AdminController {
             throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
         }
 
-        adminService.processAdminRequest(request, loginAdmin.getId(), administratorId );
+        adminService.rejectAdmin(request, loginAdmin.getId(), administratorId );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/admin/administrators/{administratorId}/approve")
+    public ResponseEntity<Void> approveAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new NotLoginException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        adminService.approveAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
