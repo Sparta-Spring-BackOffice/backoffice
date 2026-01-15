@@ -1,12 +1,13 @@
 package com.example.backoffice.common.config;
 
+import com.example.backoffice.admin.consts.DeclineReason;
 import com.example.backoffice.admin.exception.AdminException;
 import com.example.backoffice.authentification.exception.AuthentificationException;
+import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.common.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,4 +32,23 @@ public class GlobalExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
+    @ExceptionHandler(LoginDeniedException.class)
+    public ResponseEntity<ErrorResponse> DeniedHandler(LoginDeniedException e, HttpServletRequest request) {
+        String base = e.getAuthErrorCode().getMessage();
+        String detail = (e.getDeclineReason() == null)
+                ? "사유: 거부 사유가 등록되지 않았습니다."
+                : e.getDeclineReason().getMessage();
+
+        String msg = base + " 사유 : " + detail;
+
+        ErrorResponse body = ErrorResponse.of(
+                e.getStatus(),
+                e.getAuthErrorCode().getCode(),
+                msg,
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(e.getStatus()).body(body);
+    }
+
 }
