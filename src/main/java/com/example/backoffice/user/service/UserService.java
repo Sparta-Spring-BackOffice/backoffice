@@ -95,4 +95,13 @@ public class UserService {
                 user.getModifiedAt()
         );
     }
+
+    @Transactional
+    public void delete(Long userId) {
+        boolean exists = userRepository.existsById(userId);
+        if (!exists) {
+            throw new UserNotFoundException(ErrorCode.NO_SUCH_USER);
+        }
+        userRepository.deleteById(userId);
+    }
 }
