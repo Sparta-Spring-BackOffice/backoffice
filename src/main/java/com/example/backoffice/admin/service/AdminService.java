@@ -66,7 +66,7 @@ public class AdminService {
                 passwordEncoder.encode(request.getPassword()),
                 request.getPhone(),
                 AdminRole.getRole(request.getRole()),
-                AdminStatus.DENIED
+                AdminStatus.PENDING
         );
         adminRepository.save(admin);
         return new CreateAdminResponse(
