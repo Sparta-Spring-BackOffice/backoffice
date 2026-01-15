@@ -37,9 +37,13 @@ public class Product extends BaseEntity {
         this.administrator = administrator;
     }
 
-    public void update(String name, String category, BigDecimal price) {
+    public void updateInfo(String name, String category, BigDecimal price) {
         this.name = name;
         this.category = category;
         this.price = price;
+    }
+
+    public void updateStock(Long stock) {
+        this.stock = stock;
     }
 }
