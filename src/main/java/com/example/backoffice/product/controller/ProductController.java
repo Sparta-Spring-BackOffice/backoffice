@@ -62,4 +62,15 @@ public class ProductController {
     public ResponseEntity<UpdateProductStockResponse> updateProductStock(@RequestBody UpdateProductStockRequest request, @PathVariable Long productId) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStock(request, productId));
     }
+
+    @PutMapping("/admin/products/status/{productId}")
+    public ResponseEntity<UpdateProductStatusResponse> updateProductStatus(@RequestBody UpdateProductStatusRequest request, @PathVariable Long productId) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStatus(request, productId));
+    }
+
+    @DeleteMapping("/admin/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

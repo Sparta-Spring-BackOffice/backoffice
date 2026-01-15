@@ -125,4 +125,32 @@ public class ProductService {
                 product.getModifiedAt()
         );
     }
+
+    @Transactional
+    public UpdateProductStatusResponse updateProductStatus(UpdateProductStatusRequest request, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+        );
+
+        product.updateStatus(request.getStatus());
+        return new UpdateProductStatusResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getStock(),
+                product.getStatus().getStatusName(),
+                product.getCreatedAt(),
+                product.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId) {
+        boolean existence = productRepository.existsById(productId);
+
+        if (!existence) {
+            throw new IllegalArgumentException("없는 상품 입니다."); // 오류 수정 예정
+        }
+        productRepository.deleteById(productId);
+    }
 }

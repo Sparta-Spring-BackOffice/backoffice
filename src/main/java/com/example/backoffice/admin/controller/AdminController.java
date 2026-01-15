@@ -39,8 +39,8 @@ public class AdminController {
     }
 
     @PostMapping("/admin/signup")
-    public ResponseEntity<CreateAdminResponse> signup(
-            @RequestBody CreateAdminRequest request) {
+    public ResponseEntity<CreateAdminResponse> signup (
+            @Valid @RequestBody CreateAdminRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
     }
 

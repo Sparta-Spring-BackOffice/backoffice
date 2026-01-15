@@ -30,9 +30,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "admin_id", nullable = false)
     private Administrator administrator;
 
-
-
-
     public Product(String name, String category, BigDecimal price, Long stock, ProductStatus status, Administrator administrator) {
         this.name = name;
         this.category = category;
@@ -50,6 +47,7 @@ public class Product extends BaseEntity {
 
     public void updateStock(Long stock) {
         this.stock = stock;
+
         if (status == ProductStatus.DISCONTINUED) {
             return;
         }
@@ -58,5 +56,9 @@ public class Product extends BaseEntity {
         } else {
             this.status = ProductStatus.FOR_SALE;
         }
+    }
+
+    public void updateStatus(ProductStatus status) {
+        this.status = status;
     }
 }

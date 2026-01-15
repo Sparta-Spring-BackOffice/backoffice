@@ -7,6 +7,7 @@ import com.example.backoffice.authentification.consts.AuthStatus;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class AuthentificationService {
             case ACTIVE -> { /* OK */ }
             case PENDING -> throw new LoginFailException(AuthErrorCode.LOGIN_PENDING_ERROR);
             case DENIED -> {
-                throw new LoginFailException(AuthErrorCode.LOGIN_DENIED_ERROR);//사유 추가 해야함
+                throw new LoginDeniedException(AuthErrorCode.LOGIN_DENIED_ERROR, admin.getDeclineFor());
             }
             case SUSPENDED -> throw new LoginFailException(AuthErrorCode.LOGIN_SUSPENDED_ERROR);
             case NON_ACTIVE -> throw new LoginFailException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
@@ -47,14 +48,6 @@ public class AuthentificationService {
                 admin.getRole(),
                 AuthStatus.LOGIN_SUCCESS
         );
-    }
-
-    private String declineReasonMessage(DeclineReason reason) {
-        return switch (reason) {
-            case UNAUTHORIZED -> "권한이 승인 기준에 부합하지 않습니다.";
-            case ADMIN_EXCESS -> "관리자 정원이 초과되었습니다.";
-            case TIME_OUT -> "승인 처리 시간이 초과되었습니다.";
-        };
     }
  }
 
