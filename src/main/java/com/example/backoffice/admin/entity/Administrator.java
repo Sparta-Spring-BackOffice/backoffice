@@ -48,4 +48,14 @@ public class Administrator extends BaseEntity {
         this.email = email;
         this.phone = phone;
     }
+
+    public void activeAdmin() {
+        status = AdminStatus.ACTIVE;
+        approvedAt = LocalDateTime.now();
+    }
+
+    public void deniedAdmin(DeclineReason declineReason) {
+        status = AdminStatus.DENIED;
+        declineFor = declineReason;
+    }
 }
