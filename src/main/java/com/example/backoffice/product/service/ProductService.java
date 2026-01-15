@@ -7,6 +7,7 @@ import com.example.backoffice.common.exception.ErrorCode;
 import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
+import com.example.backoffice.product.exception.ProductNotFoundException;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -75,7 +76,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public GetOneProductResponse findOneProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+                () -> new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT)
         );
         return new GetOneProductResponse(
                 product.getId(),
@@ -94,7 +95,7 @@ public class ProductService {
     @Transactional
     public UpdateProductInfoResponse updateProductInfo(UpdateProductInfoRequest request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+                () -> new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT)
         );
 
         product.updateInfo(request.getName(), request.getCategory(), request.getPrice());
@@ -111,7 +112,7 @@ public class ProductService {
     @Transactional
     public UpdateProductStockResponse updateProductStock(UpdateProductStockRequest request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+                () -> new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT)
         );
 
         product.updateStock(request.getStock());
@@ -129,7 +130,7 @@ public class ProductService {
     @Transactional
     public UpdateProductStatusResponse updateProductStatus(UpdateProductStatusRequest request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품 입니다.") // 에러 코드 수정 예정
+                () -> new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT)
         );
 
         product.updateStatus(request.getStatus());
@@ -149,7 +150,7 @@ public class ProductService {
         boolean existence = productRepository.existsById(productId);
 
         if (!existence) {
-            throw new IllegalArgumentException("없는 상품 입니다."); // 오류 수정 예정
+            throw new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT);
         }
         productRepository.deleteById(productId);
     }
