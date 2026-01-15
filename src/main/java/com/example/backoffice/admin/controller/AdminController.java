@@ -92,6 +92,19 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     //관리자 상태 변경
     @PutMapping("/admin/administrators/status/{administratorId}")
     public ResponseEntity<UpdateAdminStatusResponse> updateAdminStatus(
