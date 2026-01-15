@@ -1,5 +1,6 @@
 package com.example.backoffice.product.repository;
 
+import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     "(:status IS NULL OR p.status = :status)")
     Page<Product> findAllProducts(@Param("keyword") String keyword,
                                   @Param("category") String category,
-                                  @Param("status") String status,
+                                  @Param("status") ProductStatus status,
                                   Pageable pageable);
 }
