@@ -5,7 +5,6 @@ import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.NotLoginException;
-import com.example.backoffice.common.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -100,7 +99,7 @@ public class AdminController {
             @PathVariable Long administratorId,
             @Valid @RequestBody updateAdminStatusRequest request)
     {
-    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(loginAdmin, request));
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(loginAdmin.getId(), administratorId, request));
     }
     //관리자 역할 변경
     @PutMapping("/admin/administrators/role/{administratorId}")
@@ -108,7 +107,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId,
             @Valid @RequestBody updateAdminRoleRequest request){
-    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin, request));
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
     }
     //관리자 삭제
     @DeleteMapping("/admin/administrators/delete/{administratorId}")
@@ -116,7 +115,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId
     ){
-    adminService.delete(administratorId);
+    adminService.delete(loginAdmin.getId(), administratorId);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
