@@ -3,6 +3,8 @@ package com.example.backoffice.authentification.controller;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.dto.SessionAdmin;
+import com.example.backoffice.authentification.exception.AuthErrorCode;
+import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.authentification.service.AuthentificationService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,7 +28,7 @@ public class AuthentificationController {
             @SessionAttribute(name="loginUser", required = false) SessionAdmin loginUser
     ) {
         if(loginUser != null){
-            throw new IllegalStateException("이미 로그인");//에러 코드 수정 예정
+            throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
         LoginResponse loginResponse = authentificationService.login(request);
 
@@ -38,6 +40,19 @@ public class AuthentificationController {
         session.setAttribute("loginUser", sessionAdmin);
 
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    }
+
+    @PostMapping("/admin/logout")
+    public ResponseEntity<Void> logout(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin,
+            HttpSession session
+    ){
+        if(sessionAdmin == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        session.invalidate();
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
