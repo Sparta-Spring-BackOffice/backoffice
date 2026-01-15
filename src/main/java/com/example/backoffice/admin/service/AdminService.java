@@ -151,4 +151,17 @@ public class AdminService {
 
         targetAdmin.activeAdmin();
     }
+
+    @Transactional
+    public GetAdminProfileResponse getAdminProfile(Long id) {
+        Administrator findAdmin = adminRepository.findById(id).orElseThrow(
+                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
+        );
+
+        return new GetAdminProfileResponse(
+                findAdmin.getName(),
+                findAdmin.getEmail(),
+                findAdmin.getPhone()
+        );
+    }
 }
