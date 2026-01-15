@@ -49,13 +49,5 @@ public class AuthentificationService {
                 AuthStatus.LOGIN_SUCCESS
         );
     }
-
-    private String declineReasonMessage(DeclineReason reason) {
-        return switch (reason) {
-            case UNAUTHORIZED -> "권한이 승인 기준에 부합하지 않습니다.";
-            case ADMIN_EXCESS -> "관리자 정원이 초과되었습니다.";
-            case TIME_OUT -> "승인 처리 시간이 초과되었습니다.";
-        };
-    }
  }
 
