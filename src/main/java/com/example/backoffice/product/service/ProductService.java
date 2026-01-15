@@ -9,7 +9,6 @@ import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -143,5 +142,15 @@ public class ProductService {
                 product.getCreatedAt(),
                 product.getModifiedAt()
         );
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId) {
+        boolean existence = productRepository.existsById(productId);
+
+        if (!existence) {
+            throw new IllegalArgumentException("없는 상품 입니다."); // 오류 수정 예정
+        }
+        productRepository.deleteById(productId);
     }
 }
