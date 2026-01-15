@@ -4,7 +4,10 @@ import com.example.backoffice.admin.exception.AdminException;
 import com.example.backoffice.authentification.exception.AuthentificationException;
 import com.example.backoffice.common.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,5 +23,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> AuthentificationExceptionHandler(AuthentificationException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getAuthErrorCode().getCode(), e.getAuthErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e, HttpServletRequest request) {
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        ErrorResponse error = ErrorResponse.of(HttpStatus.BAD_REQUEST, "INVALID_ARGUMENT", message,
+                request.getRequestURI());
+        return ResponseEntity.badRequest().body(error);
     }
 }
