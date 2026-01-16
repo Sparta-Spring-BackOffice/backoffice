@@ -112,7 +112,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(55000),
                 OrderStatus.COMPLETED,
                 user2,
-                product2
+                product1
         );
 
         Order order3 = new Order(
@@ -121,7 +121,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 BigDecimal.valueOf(55000),
                 OrderStatus.IN_TRANSIT,
                 user1,
-                product2
+                product1
         );
 
         Order order4 = new Order(
@@ -145,6 +145,18 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 order1,
                 product1
         );
+        Review review3 = new Review(
+                3,
+                "무난한 제품이지만 가격이 조금 아쉬워요.",
+                order3,
+                product1
+        );
+        Review review4 = new Review(
+                2,
+                "무난한 제품이지만 가격이 조금 아쉬워요.",
+                order4,
+                product1
+        );
 
         Review review2 = new Review(
                 3,
@@ -155,5 +167,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 
         reviewRepository.save(review1);
         reviewRepository.save(review2);
+        reviewRepository.save(review3);
+        reviewRepository.save(review4);
     }
 }
