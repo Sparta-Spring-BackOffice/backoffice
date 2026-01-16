@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.example.backoffice.common.responsecode.ResponseProcess.responseWithBody;
+import static com.example.backoffice.common.responsecode.ResponseProcess.responseWithBuild;
 
 @RestController
 @RequiredArgsConstructor
@@ -93,7 +94,7 @@ public class AdminController {
     }
     //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/denial")
-    public ResponseEntity<Void> denyAdmin(
+    public ResponseEntity<SuccessResponse<Void>> denyAdmin(
             @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
@@ -102,11 +103,11 @@ public class AdminController {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         adminService.denyAdmin(request, loginAdmin.getId(), administratorId );
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/activation")
-    public ResponseEntity<Void> activateAdmin(
+    public ResponseEntity<SuccessResponse<Void>> activateAdmin(
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
@@ -114,11 +115,11 @@ public class AdminController {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         adminService.activateAdmin(loginAdmin.getId(), administratorId );
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 권한정지(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/suspension")
-    public ResponseEntity<Void> suspendAdmin(
+    public ResponseEntity<SuccessResponse<Void>> suspendAdmin(
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
@@ -127,11 +128,11 @@ public class AdminController {
         }
 
         adminService.suspendAdmin(loginAdmin.getId(), administratorId );
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 비활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/deactivation")
-    public ResponseEntity<Void> deactivateAdmin(
+    public ResponseEntity<SuccessResponse<Void>> deactivateAdmin(
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
@@ -139,7 +140,7 @@ public class AdminController {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         adminService.deactivateAdmin(loginAdmin.getId(), administratorId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @DeleteMapping("/admin/administrators/{administratorId}/deletion")
