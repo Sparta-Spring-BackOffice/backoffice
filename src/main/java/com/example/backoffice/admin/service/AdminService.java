@@ -207,6 +207,15 @@ public class AdminService {
         adminRepository.deleteById(administratorId);
     }
 
+    @Transactional
+    public UpdateAdminResponse updateBySuperAdmin(Long loginId, Long targetId, UpdateAdminRequest request) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
+        //존재하는 관리자인지 검사
+        Administrator administrator = findAndGet(targetId);
+        //업데이트
+        return updateResponse(administrator, request);
+    }
     //(공통기능)슈퍼 관리자인지 검사
     private void checkSuperAdmin(Long loginId) {
         Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
@@ -225,14 +234,7 @@ public class AdminService {
         return targetAdmin;
     }
 
-    public UpdateAdminResponse updateBySuperAdmin(Long loginId, Long targetId, UpdateAdminRequest request) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
-        //존재하는 관리자인지 검사
-        Administrator administrator = findAndGet(targetId);
-        //업데이트
-        return updateResponse(administrator, request);
-    }
+    //(공통기능)관리자 정보 업데이트
     private UpdateAdminResponse updateResponse(Administrator administrator, UpdateAdminRequest request){
         //업데이트
         administrator.update(request.getName(), request.getEmail(), request.getPhone());
