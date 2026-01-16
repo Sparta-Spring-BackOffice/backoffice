@@ -3,7 +3,7 @@ package com.example.backoffice.order.service;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.*;
 import com.example.backoffice.order.entity.Order;
@@ -141,5 +141,19 @@ public class OrderService {
 
         order.statusNext();
         return new ChangedOrderStatusResponse(order.getStatus().getStatusName());
+    }
+
+    @Transactional
+    public void cancelledOrder(Long orderId, CancelledOrderRequest requset) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException(ErrorCode.NO_SUCH_ORDER)
+        );
+
+        order.cancel(requset.getReason());
+
+        Product product = order.getProduct();
+        Long quantity = order.getQuantity();
+
+        product.restoreStock(quantity);
     }
 }

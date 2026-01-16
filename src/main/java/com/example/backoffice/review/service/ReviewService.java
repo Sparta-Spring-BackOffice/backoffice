@@ -1,10 +1,7 @@
 package com.example.backoffice.review.service;
 
-import com.example.backoffice.admin.entity.Administrator;
-import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
-import com.example.backoffice.common.exception.ErrorCode;
-import com.example.backoffice.product.exception.ProductNotFoundException;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.review.dto.GetOneReviewResponse;
 import com.example.backoffice.review.dto.GetReviewResponse;
 import com.example.backoffice.review.entity.Review;

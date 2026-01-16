@@ -98,9 +98,9 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 
 // ===== 주문 생성 =====
         Order order1 = new Order(
-                "ORDER-20260116-001",
+                "ORDER-20260113-001",
                 1L,
-                new BigDecimal("10000"),
+                new BigDecimal(String.valueOf(product1.getPrice())),
                 OrderStatus.READY,
                 user1,
                 product1
@@ -109,7 +109,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
         Order order2 = new Order(
                 "ORDER-20260116-002",
                 2L,
-                new BigDecimal("24000"),
+                new BigDecimal(String.valueOf(product2.getPrice())),
                 OrderStatus.CANCELLED,
                 user2,
                 product2
@@ -135,5 +135,6 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 
         reviewRepository.save(review1);
         reviewRepository.save(review2);
+
     }
 }

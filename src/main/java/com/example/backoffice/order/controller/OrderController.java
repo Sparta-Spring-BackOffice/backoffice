@@ -61,4 +61,13 @@ public class OrderController {
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.changedStatusOrder(orderId));
     }
+
+    @PutMapping("/admin/orders/{orderId}/cancelled")
+    public ResponseEntity<Void>  cancelledOrder(
+            @PathVariable Long orderId,
+            @Valid @RequestBody CancelledOrderRequest requset
+    ) {
+        orderService.cancelledOrder(orderId,requset);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

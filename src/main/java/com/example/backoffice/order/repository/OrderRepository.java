@@ -9,8 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -39,5 +43,23 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             " AND o.status != :cancelledStatus" +
             " GROUP BY o.user.id")
     Optional<UserOrderDto> findUserOrderDtoByUserId(Long userId, OrderStatus cancelledStatus);
+  
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt BETWEEN :start AND :end")
+    Long countByCreatedAt(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COALESCE(SUM(o.amount), 0) FROM Order o ")
+    BigDecimal sumTotalSales();
+
+    @Query("SELECT COALESCE(SUM(o.amount), 0) FROM Order o WHERE o.createdAt BETWEEN :start AND :end")
+    BigDecimal sumTodaySales(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status")
+    Long countByReadyStatus(OrderStatus status);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status")
+    Long countByInTransitStatus(OrderStatus status);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status")
+    Long countByCompletedStatus(OrderStatus status);
 }
 

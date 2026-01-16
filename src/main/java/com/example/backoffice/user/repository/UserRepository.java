@@ -1,11 +1,14 @@
 package com.example.backoffice.user.repository;
 
+import com.example.backoffice.dashboard.dto.UserStatusDto;
 import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
@@ -20,4 +23,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
             "AND (:status IS NULL OR u.status = :status)")
     Page<User> findByNameKeyword(String keyword, Pageable pageable, UserStatus status);
 
+    @Query("SELECT COUNT(u) FROM User u WHERE u.status = :status")
+    Long countByActiveStatus(UserStatus status);
+
+    @Query("SELECT new com.example.backoffice.dashboard.dto.UserStatusDto(u.status, COUNT(u)) "+
+           "FROM User u GROUP BY u.status")
+    List<UserStatusDto> countByUserByStatus();
 }

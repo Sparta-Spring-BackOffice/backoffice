@@ -1,6 +1,6 @@
 package com.example.backoffice.user.exception;
 
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends UserException {

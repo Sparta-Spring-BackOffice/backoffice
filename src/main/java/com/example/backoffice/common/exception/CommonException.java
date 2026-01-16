@@ -1,5 +1,6 @@
 package com.example.backoffice.common.exception;
 
+import com.example.backoffice.common.responsecode.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
