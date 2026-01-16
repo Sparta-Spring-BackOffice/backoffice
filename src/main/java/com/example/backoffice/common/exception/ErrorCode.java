@@ -18,7 +18,9 @@ public enum ErrorCode {
     OUT_OF_STOCK("OUT_OF_STOCK", "품절된 상품은 주문할 수 없습니다."),
     INSUFFICIENT_STOCK("INSUFFICIENT_STOCK", "재고가 주문 수량보다 부족하여 주문할 수 없습니다."),
     NO_SUCH_ORDER("NO_SUCH_ORDER", "존재하지 않는 주문입니다."),
-    UNABLE_CANCEL("UNABLE_CANCEL", "배송중 또는 배송완료 주문은 취소할 수 없습니다.");
+    UNABLE_CANCEL("UNABLE_CANCEL", "배송중 또는 배송완료 주문은 취소할 수 없습니다."),
+    INVALID_RATING("INVALID_RATING", "평점은 1~5점입니다."),
+    REVIEW_NOT_FOUND("REVIEW_NOT_FOUND", "리뷰가 존재하지 않습니다");
     private final String code;
     private final String message;
 }
