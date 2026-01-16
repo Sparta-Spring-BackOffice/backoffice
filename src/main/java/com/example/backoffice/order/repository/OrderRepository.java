@@ -1,11 +1,16 @@
 package com.example.backoffice.order.repository;
 
 import com.example.backoffice.order.consts.OrderStatus;
+import com.example.backoffice.order.dto.UserOrderDto;
 import com.example.backoffice.order.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+import java.util.Optional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +28,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "AND (:status IS NULL OR o.status = :status)")
     Page<Order> findByNameKeyword(String keyword, Pageable pageable, OrderStatus status);
 
+    @Query("SELECT NEW com.example.backoffice.order.dto.UserOrderDto(o.user.id, count(o.id), sum(o.amount))" +
+            " FROM Order o" +
+            " WHERE o.user.id in :userIdList" +
+            " AND o.status != :cancelledStatus" +
+            " GROUP BY o.user.id")
+    List<UserOrderDto> findUserOrderDtoByUserIdList(List<Long> userIdList, OrderStatus cancelledStatus);
+
+
+    @Query("SELECT NEW com.example.backoffice.order.dto.UserOrderDto(o.user.id, count(o.id), sum(o.amount))" +
+            " FROM Order o" +
+            " WHERE o.user.id = :userId" +
+            " AND o.status != :cancelledStatus" +
+            " GROUP BY o.user.id")
+    Optional<UserOrderDto> findUserOrderDtoByUserId(Long userId, OrderStatus cancelledStatus);
+  
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt = :createdAt")
     Long countByCreatedAt(LocalDateTime createdAt);
 }
+

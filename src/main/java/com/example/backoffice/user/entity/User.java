@@ -1,11 +1,15 @@
 package com.example.backoffice.user.entity;
 
 import com.example.backoffice.common.config.BaseEntity;
+import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.user.consts.UserStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -43,7 +47,5 @@ public class User extends BaseEntity {
     public void updateUserStatus(UserStatus status) {
         this.status = status;
     }
-
-
 
 }

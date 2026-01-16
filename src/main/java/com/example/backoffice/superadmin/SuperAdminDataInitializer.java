@@ -5,6 +5,7 @@ import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.config.PasswordEncoder;
+import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.product.consts.ProductStatus;
@@ -98,12 +99,18 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 //// ===== 주문 생성 =====
 //        Order order1 = new Order(
 //                "ORDER-20260116-001",
+//                1L,
+//                new BigDecimal("10000"),
+//                OrderStatus.READY,
 //                user1,
 //                product1
 //        );
 //
 //        Order order2 = new Order(
 //                "ORDER-20260116-002",
+//                2L,
+//                new BigDecimal("24000"),
+//                OrderStatus.CANCELLED,
 //                user2,
 //                product2
 //        );
@@ -129,5 +136,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 //        reviewRepository.save(review1);
 //        reviewRepository.save(review2);
 
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
     }
 }
