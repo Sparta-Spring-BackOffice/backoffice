@@ -5,6 +5,8 @@ import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
+import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.SuccessCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,24 +18,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.backoffice.common.responsecode.ResponseProcess.responseWithBody;
+
 @RestController
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
     //관리자 가입신청(조건 : 비로그인)
     @PostMapping("/admin/signup")
-    public ResponseEntity<CreateAdminResponse> signup (
+    public ResponseEntity<SuccessResponse<CreateAdminResponse>> signup (
             @Valid @RequestBody CreateAdminRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
+        return responseWithBody(SuccessCode.LOGIN_SUCCESS, adminService.create(request));
     }
     //내 프로필 조회(조건 : 로그인, 권한 수준 : 모든 관리자)
     @GetMapping("/admin/profile")
-    public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
+    public ResponseEntity<SuccessResponse<GetAdminProfileResponse>> getAdminProfile(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
+        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getAdminProfile(loginAdmin.getId()));
     }
     //내 정보 수정(조건 : 로그인, 권한 수준 : 모든 관리자)
     @PutMapping("/admin/profile/general")
