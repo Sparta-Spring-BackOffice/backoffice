@@ -20,9 +20,9 @@ public class GetOneOrderResponse {
     private final String status;
     private final String adminName;
     private final String adminEmail;
-    private final String adminStatus;
+    private final String adminRole;
 
-    public GetOneOrderResponse(Long id, String orderNumber, String userName, String productName, BigDecimal price, Long quantity, BigDecimal amount, LocalDateTime createdAt, LocalDateTime modifiedAt, String status, String adminName, String adminEmail, String adminStatus) {
+    public GetOneOrderResponse(Long id, String orderNumber, String userName, String productName, BigDecimal price, Long quantity, BigDecimal amount, LocalDateTime createdAt, LocalDateTime modifiedAt, String status, String adminName, String adminEmail, String adminRole) {
         this.id = id;
         this.orderNumber = orderNumber;
         this.userName = userName;
@@ -35,7 +35,7 @@ public class GetOneOrderResponse {
         this.status = status;
         this.adminName = adminName;
         this.adminEmail = adminEmail;
-        this.adminStatus = adminStatus;
+        this.adminRole = adminRole;
     }
 }
 

@@ -129,7 +129,7 @@ public class OrderService {
                 // 어드민 주문일 경우 데이터 아닐경우 null
                 isAdmin ? order.getProduct().getAdministrator().getName() : null,
                 isAdmin ? order.getProduct().getAdministrator().getEmail(): null,
-                isAdmin ? order.getProduct().getAdministrator().getStatus().getStatusName(): null
+                isAdmin ? order.getProduct().getAdministrator().getRole().getRoleName(): null
         );
     }
 }
