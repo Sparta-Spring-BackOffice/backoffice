@@ -1,7 +1,7 @@
 package com.example.backoffice.admin.consts;
 
 import com.example.backoffice.admin.exception.NoSuchAdminStatusException;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

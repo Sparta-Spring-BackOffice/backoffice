@@ -11,7 +11,7 @@ import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

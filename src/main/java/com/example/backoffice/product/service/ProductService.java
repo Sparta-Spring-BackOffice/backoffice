@@ -3,7 +3,7 @@ package com.example.backoffice.product.service;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;

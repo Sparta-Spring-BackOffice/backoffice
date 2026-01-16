@@ -1,6 +1,6 @@
 package com.example.backoffice.user.service;
 
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.UserOrderDto;
 import com.example.backoffice.order.repository.OrderRepository;
@@ -9,6 +9,7 @@ import com.example.backoffice.user.dto.*;
 import com.example.backoffice.user.entity.User;
 import com.example.backoffice.user.exception.UserNotFoundException;
 import com.example.backoffice.user.repository.UserRepository;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
