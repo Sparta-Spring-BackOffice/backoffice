@@ -48,18 +48,26 @@ public class Administrator extends BaseEntity {
         this.email = email;
         this.phone = phone;
     }
-
-    public void activeAdmin() {
+    //상태명인 ACTIVE와 매칭하는 것이 덜 헷갈릴 것 같아 activate로 바꿈
+    public void activate() {
         status = AdminStatus.ACTIVE;
         approvedAt = LocalDateTime.now();
     }
-
-    public void deniedAdmin(DeclineReason declineReason) {
+    //상태명 DENIED 고려하여 deny로 바꿈
+    public void deny(DeclineReason declineReason) {
         status = AdminStatus.DENIED;
         declineFor = declineReason;
     }
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+    //상태명 고려
+    public void suspend() {
+        this.status = AdminStatus.SUSPENDED;
+    }
+    //동사로 바꾸려니 이게 제일 나음
+    public void deactivate() {
+        this.status = AdminStatus.NON_ACTIVE;
     }
 }
