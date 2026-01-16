@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -29,8 +30,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             " WHERE o.user.id in :userIdList" +
             " AND o.status != :cancelledStatus" +
             " GROUP BY o.user.id")
-    List<UserOrderDto> findUserOrderDtoByUserID(List<Long> userIdList, OrderStatus cancelledStatus);
+    List<UserOrderDto> findUserOrderDtoByUserIdList(List<Long> userIdList, OrderStatus cancelledStatus);
 
 
+    @Query("SELECT NEW com.example.backoffice.order.dto.UserOrderDto(o.user.id, count(o.id), sum(o.amount))" +
+            " FROM Order o" +
+            " WHERE o.user.id = :userId" +
+            " AND o.status != :cancelledStatus" +
+            " GROUP BY o.user.id")
+    Optional<UserOrderDto> findUserOrderDtoByUserId(Long userId, OrderStatus cancelledStatus);
 }
 
