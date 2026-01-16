@@ -77,7 +77,7 @@ public class AdminController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(loginAdmin.getId(), keyword, role, status, converted));
     }
-    //관리자 단건조회(조건 : 로그인, 권한 수준 : 모든 관리자)
+    //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<GetOneAdminResponse> getOneAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
