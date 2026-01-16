@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Getter
 @Entity
 @Table(name = "orders")
@@ -22,7 +24,8 @@ public class Order extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String orderNumber;
-
+    private Long quantity;
+    private BigDecimal amount;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -34,8 +37,10 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Order(String orderNumber, OrderStatus status, User user, Product product) {
+    public Order(String orderNumber, Long quantity, BigDecimal amount, OrderStatus status, User user, Product product) {
         this.orderNumber = orderNumber;
+        this.quantity = quantity;
+        this.amount = amount;
         this.status = status;
         this.user = user;
         this.product = product;

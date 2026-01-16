@@ -1,5 +1,8 @@
 package com.example.backoffice.order.consts;
 
+import lombok.Getter;
+
+@Getter
 public enum OrderStatus {
     READY("READY"),
     IN_TRANSIT("IN_TRANSIT"),
@@ -12,7 +15,4 @@ public enum OrderStatus {
         this.statusName = statusName;
     }
 
-    public String getStatusName() {
-        return statusName;
-    }
 }
