@@ -9,7 +9,7 @@ public class ResponseProcess {
         return ResponseEntity.status(successCode.getStatusCode()).body(new SuccessResponse<>(successCode, dto));
     }
 
-    public static ResponseEntity<SuccessResponse<Void>> responseWithBuild(SuccessCode successCode){
+    public static <T> ResponseEntity<SuccessResponse<T>> responseWithBuild(SuccessCode successCode, T dto){
         return ResponseEntity.status(successCode.getStatusCode()).body(new SuccessResponse<>(successCode, null));
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 public enum SuccessCode {
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
-    LOGOUT_SUCCESS(HttpStatus.NO_CONTENT, "로그아웃에 성공하였습니다.");
+    LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃에 성공하였습니다.");
 
     private final HttpStatusCode statusCode;
     private final String message;
