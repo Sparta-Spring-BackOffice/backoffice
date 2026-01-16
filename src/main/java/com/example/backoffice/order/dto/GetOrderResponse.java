@@ -20,7 +20,6 @@ public class GetOrderResponse {
     private final String status;
     private final String adminName;
 
-
     public GetOrderResponse(Long id, String orderNumber, String userName, String productName, BigDecimal price, Long quantity, BigDecimal amount, LocalDateTime createdAt, LocalDateTime modifiedAt, String status, String adminName) {
         this.id = id;
         this.orderNumber = orderNumber;
