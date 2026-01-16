@@ -1,8 +1,10 @@
 package com.example.backoffice.product.dto;
 
+import com.example.backoffice.review.dto.LatestReviewDto;
 import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class GetOneProductResponse {
@@ -23,8 +25,9 @@ public class GetOneProductResponse {
     private final Long star3;
     private final Long star4;
     private final Long star5;
+    List<LatestReviewDto> latestReviews;
 
-    public GetOneProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String adminName, String adminEmail, Long totalCount, Double avgRating, Long star1, Long star2, Long star3, Long star4, Long star5) {
+    public GetOneProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String adminName, String adminEmail, Long totalCount, Double avgRating, Long star1, Long star2, Long star3, Long star4, Long star5, List<LatestReviewDto> latestReviews) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -42,5 +45,6 @@ public class GetOneProductResponse {
         this.star3 = star3;
         this.star4 = star4;
         this.star5 = star5;
+        this.latestReviews = latestReviews;
     }
 }

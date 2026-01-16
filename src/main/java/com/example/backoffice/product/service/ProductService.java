@@ -9,13 +9,17 @@ import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.exception.ProductNotFoundException;
 import com.example.backoffice.product.repository.ProductRepository;
+import com.example.backoffice.review.dto.LatestReviewDto;
 import com.example.backoffice.review.dto.ProductReviewStatsDto;
 import com.example.backoffice.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +87,16 @@ public class ProductService {
         );
 
         ProductReviewStatsDto productReviewStatsDto = reviewRepository.getProductReviewStats(productId);
+        if (productReviewStatsDto == null) {
+            productReviewStatsDto = new ProductReviewStatsDto(
+                    productId,
+                    0L,
+                    0.0,
+                    0L, 0L, 0L, 0L, 0L
+            );
+        }
         double avgRating = Math.round(productReviewStatsDto.getAvgRating() * 10.0) / 10.0;
+        List<LatestReviewDto> latestReviews = reviewRepository.findLatestReviewDto(productId, PageRequest.of(0, 3));
         return new GetOneProductResponse(
                 product.getId(),
                 product.getName(),
@@ -101,7 +114,8 @@ public class ProductService {
                 productReviewStatsDto.getStar2(),
                 productReviewStatsDto.getStar3(),
                 productReviewStatsDto.getStar4(),
-                productReviewStatsDto.getStar5()
+                productReviewStatsDto.getStar5(),
+                latestReviews
         );
     }
 

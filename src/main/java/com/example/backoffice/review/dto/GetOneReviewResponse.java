@@ -15,6 +15,7 @@ public class GetOneReviewResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
+
     public GetOneReviewResponse(Long id, String productName, String userName, String userEmail, Integer rating, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.productName = productName;
