@@ -7,8 +7,12 @@ import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.authentification.service.AuthentificationService;
+import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.SuccessCode;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +27,7 @@ public class AuthentificationController {
     private final AuthentificationService authentificationService;
 
     @PostMapping("/admin/login")
-    public ResponseEntity<LoginResponse> login(
+    public ResponseEntity<SuccessResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
             HttpSession session,
             @SessionAttribute(name="loginUser", required = false) SessionAdmin loginUser
@@ -32,6 +36,7 @@ public class AuthentificationController {
             throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
         LoginResponse loginResponse = authentificationService.login(request);
+        SuccessResponse<LoginResponse> response = SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, loginResponse);
 
         SessionAdmin sessionAdmin = new SessionAdmin(
                 loginResponse.getId(),
@@ -40,7 +45,7 @@ public class AuthentificationController {
 
         session.setAttribute("loginUser", sessionAdmin);
 
-        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/admin/logout")

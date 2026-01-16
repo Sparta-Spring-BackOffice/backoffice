@@ -1,6 +1,6 @@
 package com.example.backoffice.review.exception;
 
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class ReviewNotFoundException extends ReviewException {
