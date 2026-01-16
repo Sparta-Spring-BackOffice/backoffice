@@ -28,11 +28,13 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public List<GetAdminResponse> getAllAdmins(String keyword, String role, String status, Pageable pageable) {
+    public List<GetAdminResponse> getAllAdmins(Long loginId, String keyword, String role, String status, Pageable pageable) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
 
         Page<Administrator> findAdmins;
 
-        if(keyword.isEmpty()){
+        if(keyword == null || keyword.isEmpty()){ //keyword에 대한 null 체크
             keyword = null;
         }
 
@@ -222,7 +224,7 @@ public class AdminService {
         //상태 변경
         targetAdmin.deactivate();
     }
-
+    @Transactional
     public void deleteAdmin(Long loginId, Long administratorId) {
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
