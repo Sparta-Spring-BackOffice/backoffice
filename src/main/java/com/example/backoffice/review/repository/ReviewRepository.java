@@ -1,5 +1,6 @@
 package com.example.backoffice.review.repository;
 
+import com.example.backoffice.review.dto.LatestReviewDto;
 import com.example.backoffice.review.dto.ProductReviewStatsDto;
 import com.example.backoffice.review.entity.Review;
 import org.springframework.data.domain.Page;
@@ -30,4 +31,11 @@ WHERE (:keyword IS NULL OR :keyword = ''
 
     @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r")
     double findAverageRating();
+
+    @Query("SELECT NEW com.example.backoffice.review.dto.LatestReviewDto(r.order.user.name, r.rating, r.content, r.createdAt, r.modifiedAt)" +
+            " FROM Review r" +
+            " WHERE r.product.id = :productId" +
+            " order by r.createdAt desc ")
+    List<LatestReviewDto> findLatestReviewDto(Long productId, Pageable pageable);
 }
+
