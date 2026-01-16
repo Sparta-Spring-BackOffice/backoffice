@@ -20,7 +20,9 @@ public enum ErrorCode {
     NO_SUCH_ORDER("NO_SUCH_ORDER", "존재하지 않는 주문입니다."),
     UNABLE_CANCEL("UNABLE_CANCEL", "배송중 또는 배송완료 주문은 취소할 수 없습니다."),
     INVALID_RATING("INVALID_RATING", "평점은 1~5점입니다."),
-    REVIEW_NOT_FOUND("REVIEW_NOT_FOUND", "리뷰가 존재하지 않습니다");
+    REVIEW_NOT_FOUND("REVIEW_NOT_FOUND", "리뷰가 존재하지 않습니다"),
+    ALREADY_COMPLETED("ALREADY_COMPLETED", "이미 완료된 주문입니다."),
+    ALREADY_CANCELLED("ALREADY_CANCELLED","취소된 주문은 상태를 변경할 수 없습니다.");
     private final String code;
     private final String message;
 }
