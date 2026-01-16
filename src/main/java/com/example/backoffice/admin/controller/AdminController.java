@@ -144,7 +144,7 @@ public class AdminController {
     }
     //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @DeleteMapping("/admin/administrators/{administratorId}/deletion")
-    public ResponseEntity<Void> deleteAdmin(
+    public ResponseEntity<SuccessResponse<Void>> deleteAdmin(
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
@@ -152,7 +152,7 @@ public class AdminController {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         adminService.deleteAdmin(loginAdmin.getId(), administratorId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}")
