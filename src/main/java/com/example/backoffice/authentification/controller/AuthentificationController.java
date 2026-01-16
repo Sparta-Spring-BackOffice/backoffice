@@ -8,6 +8,7 @@ import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.authentification.service.AuthentificationService;
 import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.ResponseProcess;
 import com.example.backoffice.common.responsecode.SuccessCode;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,7 +37,6 @@ public class AuthentificationController {
             throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
         LoginResponse loginResponse = authentificationService.login(request);
-        SuccessResponse<LoginResponse> response = SuccessResponse.success(SuccessCode.LOGIN_SUCCESS, loginResponse);
 
         SessionAdmin sessionAdmin = new SessionAdmin(
                 loginResponse.getId(),
@@ -45,11 +45,12 @@ public class AuthentificationController {
 
         session.setAttribute("loginUser", sessionAdmin);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseProcess.responseWithBody(SuccessCode.LOGIN_SUCCESS, loginResponse);
+//        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>(SuccessCode.LOGIN_SUCCESS, loginResponse));
     }
 
     @PostMapping("/admin/logout")
-    public ResponseEntity<Void> logout(
+    public ResponseEntity<SuccessResponse<Void>> logout(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin,
             HttpSession session
     ){
@@ -58,7 +59,8 @@ public class AuthentificationController {
         }
         session.invalidate();
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS);
     }
 
 }
