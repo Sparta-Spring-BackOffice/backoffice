@@ -3,6 +3,9 @@ package com.example.backoffice.review.controller;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
+import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.ResponseProcess;
+import com.example.backoffice.common.responsecode.SuccessCode;
 import com.example.backoffice.product.service.ProductService;
 import com.example.backoffice.review.dto.GetOneReviewResponse;
 import com.example.backoffice.review.dto.GetReviewResponse;
@@ -23,7 +26,7 @@ public class ReviewController {
     private final ProductService productService;
 
     @GetMapping("/admin/reviews")
-   public ResponseEntity<Page<GetReviewResponse>> getReviews(
+   public ResponseEntity<SuccessResponse<Page<GetReviewResponse>>> getReviews(
            @RequestParam(required = false) String keyword,
            @PageableDefault Pageable pageable,
            @RequestParam(defaultValue = "1") int page,
@@ -35,16 +38,16 @@ public class ReviewController {
                pageable.getSort()
        );
 
-       return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReview(keyword, converted, rating));
+       return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findReview(keyword, converted, rating));
    }
 
    @GetMapping("/admin/reviews/{reviewId}")
-    public ResponseEntity<GetOneReviewResponse> getReview(@PathVariable Long  reviewId) {
-       return ResponseEntity.status(HttpStatus.OK).body(reviewService.findOne(reviewId));
+    public ResponseEntity<SuccessResponse<GetOneReviewResponse>> getReview(@PathVariable Long  reviewId) {
+       return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findOne(reviewId));
    }
 
    @DeleteMapping("/admin/reviews/{reviewId}")
-    public ResponseEntity<Void> deleteReview(
+    public ResponseEntity<SuccessResponse<Void>> deleteReview(
             @PathVariable Long  reviewId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
    ) {
@@ -52,6 +55,6 @@ public class ReviewController {
            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
        }
        reviewService.deleteReview(reviewId);
-       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+       return ResponseProcess.responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
    }
 }
