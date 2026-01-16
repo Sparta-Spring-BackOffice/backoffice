@@ -46,7 +46,7 @@ public class AuthentificationController {
         session.setAttribute("loginUser", sessionAdmin);
 
         return ResponseProcess.responseWithBody(SuccessCode.LOGIN_SUCCESS, loginResponse);
-//        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>(SuccessCode.LOGIN_SUCCESS, loginResponse));
+
     }
 
     @PostMapping("/admin/logout")
@@ -60,7 +60,7 @@ public class AuthentificationController {
         session.invalidate();
 
 
-        return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS);
+        return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
 
 }
