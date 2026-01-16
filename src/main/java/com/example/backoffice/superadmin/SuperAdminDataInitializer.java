@@ -75,95 +75,66 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
         userRepository.save(user3);
 
 
-        Product product1 = new Product(
-                "아이폰 15",
-                "전자기기",
-                new BigDecimal("1500000"),
-                10L,
-                ProductStatus.FOR_SALE,
-                superAdmin
-        );
-
-        Product product2 = new Product(
-                "맥북 프로",
-                "전자기기",
-                new BigDecimal("3000000"),
-                5L,
-                ProductStatus.FOR_SALE,
-                superAdmin
-        );
-
-        productRepository.save(product1);
-        productRepository.save(product2);
-
-// ===== 주문 생성 =====
-        Order order1 = new Order(
-                "ORDER-20260116-001",
-                3L,
-                BigDecimal.valueOf(100000),
-                OrderStatus.READY,
-                user1,
-                product1
-        );
-
-        Order order2 = new Order(
-                "ORDER-20260116-002",
-                2L,
-                BigDecimal.valueOf(55000),
-                OrderStatus.COMPLETED,
-                user2,
-                product1
-        );
-
-        Order order3 = new Order(
-                "ORDER-20260116-003",
-                4L,
-                BigDecimal.valueOf(55000),
-                OrderStatus.IN_TRANSIT,
-                user1,
-                product1
-        );
-
-        Order order4 = new Order(
-                "ORDER-20260116-004",
-                4L,
-                BigDecimal.valueOf(55000),
-                OrderStatus.CANCELLED,
-                user1,
-                product2
-        );
-
-        orderRepository.save(order1);
-        orderRepository.save(order2);
-        orderRepository.save(order3);
-        orderRepository.save(order4);
-
-// ===== 리뷰 생성 =====
-        Review review1 = new Review(
-                5,
-                "배송도 빠르고 상품 상태가 정말 좋습니다.",
-                order1,
-                product1
-        );
-        Review review3 = new Review(
-                3,
-                "무난한 제품이지만 가격이 조금 아쉬워요.",
-                order3,
-                product1
-        );
-        Review review4 = new Review(
-                2,
-                "무난한 제품이지만 가격이 조금 아쉬워요.",
-                order4,
-                product1
-        );
-
-        Review review2 = new Review(
-                3,
-                "무난한 제품이지만 가격이 조금 아쉬워요.",
-                order2,
-                product2
-        );
+//        Product product1 = new Product(
+//                "아이폰 15",
+//                "전자기기",
+//                new BigDecimal("1500000"),
+//                10L,
+//                ProductStatus.FOR_SALE,
+//                superAdmin
+//        );
+//
+//        Product product2 = new Product(
+//                "맥북 프로",
+//                "전자기기",
+//                new BigDecimal("3000000"),
+//                5L,
+//                ProductStatus.FOR_SALE,
+//                superAdmin
+//        );
+//
+//        productRepository.save(product1);
+//        productRepository.save(product2);
+//
+//// ===== 주문 생성 =====
+//        Order order1 = new Order(
+//                "ORDER-20260116-001",
+//                1L,
+//                new BigDecimal("10000"),
+//                OrderStatus.READY,
+//                user1,
+//                product1
+//        );
+//
+//        Order order2 = new Order(
+//                "ORDER-20260116-002",
+//                2L,
+//                new BigDecimal("24000"),
+//                OrderStatus.CANCELLED,
+//                user2,
+//                product2
+//        );
+//
+//        orderRepository.save(order1);
+//        orderRepository.save(order2);
+//
+//// ===== 리뷰 생성 =====
+//        Review review1 = new Review(
+//                5,
+//                "배송도 빠르고 상품 상태가 정말 좋습니다.",
+//                order1,
+//                product1
+//        );
+//
+//        Review review2 = new Review(
+//                3,
+//                "무난한 제품이지만 가격이 조금 아쉬워요.",
+//                order2,
+//                product2
+//        );
+//
+//        reviewRepository.save(review1);
+//        reviewRepository.save(review2);
 
         reviewRepository.save(review1);
         reviewRepository.save(review2);

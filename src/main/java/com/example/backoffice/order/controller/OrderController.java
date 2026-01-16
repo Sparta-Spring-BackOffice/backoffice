@@ -4,10 +4,7 @@ import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.order.consts.OrderStatus;
-import com.example.backoffice.order.dto.CreateOrderRequest;
-import com.example.backoffice.order.dto.CreateOrderResponse;
-import com.example.backoffice.order.dto.GetOneOrderResponse;
-import com.example.backoffice.order.dto.GetOrderResponse;
+import com.example.backoffice.order.dto.*;
 import com.example.backoffice.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,8 +51,14 @@ public class OrderController {
             @PathVariable Long orderId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin
     ) {
-        // 어드민주문인지 확인
         boolean isAdmin = (sessionAdmin != null);
         return ResponseEntity.status(HttpStatus.OK).body(orderService.findOneOrder(orderId, isAdmin));
+    }
+
+    @PutMapping("/admin/orders/{orderId}")
+    public ResponseEntity<ChangedOrderStatusResponse> changedStatusOrder(
+            @PathVariable Long orderId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.changedStatusOrder(orderId));
     }
 }
