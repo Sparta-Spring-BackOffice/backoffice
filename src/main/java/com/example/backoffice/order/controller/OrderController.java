@@ -6,6 +6,7 @@ import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.CreateOrderRequest;
 import com.example.backoffice.order.dto.CreateOrderResponse;
+import com.example.backoffice.order.dto.GetOneOrderResponse;
 import com.example.backoffice.order.dto.GetOrderResponse;
 import com.example.backoffice.order.service.OrderService;
 import jakarta.validation.Valid;
@@ -46,5 +47,15 @@ public class OrderController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(orderService.findAllOrders(keyword, converted, status));
+    }
+
+    @GetMapping("/admin/orders/{orderId}")
+    public ResponseEntity<GetOneOrderResponse> getOneOrder(
+            @PathVariable Long orderId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin
+    ) {
+        // 어드민주문인지 확인
+        boolean isAdmin = (sessionAdmin != null);
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.findOneOrder(orderId, isAdmin));
     }
 }
