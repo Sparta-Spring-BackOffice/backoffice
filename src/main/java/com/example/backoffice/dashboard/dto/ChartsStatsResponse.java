@@ -1,7 +1,6 @@
 package com.example.backoffice.dashboard.dto;
 
 import lombok.Getter;
-
 import java.util.List;
 
 @Getter

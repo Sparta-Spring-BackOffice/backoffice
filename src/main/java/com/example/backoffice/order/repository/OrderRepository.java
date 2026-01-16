@@ -61,5 +61,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status")
     Long countByCompletedStatus(OrderStatus status);
+
+    List<Order> findTop10ByOrderByCreatedAtDesc();
 }
 
