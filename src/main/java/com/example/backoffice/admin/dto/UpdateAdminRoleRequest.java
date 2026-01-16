@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class UpdateAdminRoleRequest {
-    @NotNull(message = "상태 변경에 실패했습니다. 한 가지 이상의 역할을 선택하여 주십시오.")
-    private AdminRole adminRole;
+    @NotNull(message = "역할 변경에 실패했습니다. 변경할 역할을 선택하여 주십시오.")
+    private AdminRole role;
 }

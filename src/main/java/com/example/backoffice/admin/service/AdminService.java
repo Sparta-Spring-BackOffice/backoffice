@@ -260,7 +260,7 @@ public class AdminService {
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(targetId);
         //업데이트
-        administrator.updateRole(request.getAdminRole());
+        administrator.updateRole(request.getRole());
         adminRepository.flush();
         return new UpdateAdminRoleResponse(
                 administrator.getName(),
