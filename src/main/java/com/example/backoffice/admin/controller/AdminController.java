@@ -149,6 +149,7 @@ public class AdminController {
         adminService.deleteAdmin(loginAdmin.getId(), administratorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     //아직 코드 구현 전
     //관리자 역할 변경
 //    @PutMapping("/admin/administrators/role/{administratorId}")

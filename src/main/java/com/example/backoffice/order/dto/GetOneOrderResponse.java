@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
-public class GetOrderResponse {
+public class GetOneOrderResponse {
 
     private final Long id;
     private final String orderNumber;
@@ -19,8 +19,10 @@ public class GetOrderResponse {
     private final LocalDateTime modifiedAt;
     private final String status;
     private final String adminName;
+    private final String adminEmail;
+    private final String adminRole;
 
-    public GetOrderResponse(Long id, String orderNumber, String userName, String productName, BigDecimal price, Long quantity, BigDecimal amount, LocalDateTime createdAt, LocalDateTime modifiedAt, String status, String adminName) {
+    public GetOneOrderResponse(Long id, String orderNumber, String userName, String productName, BigDecimal price, Long quantity, BigDecimal amount, LocalDateTime createdAt, LocalDateTime modifiedAt, String status, String adminName, String adminEmail, String adminRole) {
         this.id = id;
         this.orderNumber = orderNumber;
         this.userName = userName;
@@ -32,5 +34,8 @@ public class GetOrderResponse {
         this.modifiedAt = modifiedAt;
         this.status = status;
         this.adminName = adminName;
+        this.adminEmail = adminEmail;
+        this.adminRole = adminRole;
     }
 }
+
