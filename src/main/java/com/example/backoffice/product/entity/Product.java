@@ -61,4 +61,14 @@ public class Product extends BaseEntity {
     public void updateStatus(ProductStatus status) {
         this.status = status;
     }
+
+    public void restoreStock(Long quantity) {
+        this.stock += quantity;
+
+        if (this.status != ProductStatus.DISCONTINUED) {
+            if (this.stock > 0) {
+                this.status = ProductStatus.FOR_SALE;
+            }
+        }
+    }
 }
