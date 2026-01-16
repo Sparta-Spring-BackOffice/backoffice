@@ -152,7 +152,7 @@ public class AdminController {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
         adminService.deleteAdmin(loginAdmin.getId(), administratorId);
-        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
+        return responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
     }
     //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}")
