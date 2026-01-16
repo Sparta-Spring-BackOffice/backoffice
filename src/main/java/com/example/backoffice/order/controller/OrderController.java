@@ -56,7 +56,7 @@ public class OrderController {
     }
 
     @PutMapping("/admin/orders/{orderId}")
-    public ResponseEntity<ChangedStatusOrderResponse> changedStatusOrder(
+    public ResponseEntity<ChangedOrderStatusResponse> changedStatusOrder(
             @PathVariable Long orderId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.changedStatusOrder(orderId));

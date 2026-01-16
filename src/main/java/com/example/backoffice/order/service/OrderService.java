@@ -20,7 +20,6 @@ import com.example.backoffice.user.entity.User;
 import com.example.backoffice.user.exception.UserNotFoundException;
 import com.example.backoffice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -135,12 +134,12 @@ public class OrderService {
     }
 
     @Transactional
-    public ChangedStatusOrderResponse changedStatusOrder(Long orderId) {
+    public ChangedOrderStatusResponse changedStatusOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException(ErrorCode.NO_SUCH_ORDER)
         );
 
         order.statusNext();
-        return new ChangedStatusOrderResponse(order.getStatus().getStatusName());
+        return new ChangedOrderStatusResponse(order.getStatus().getStatusName());
     }
 }
