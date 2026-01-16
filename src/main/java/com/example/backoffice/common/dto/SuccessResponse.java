@@ -17,11 +17,6 @@ public class SuccessResponse<T> {
     private final String message;
     private final T data;
 
-
-    public static <T> @NonNull SuccessResponse<T> success(SuccessCode successCode, T data) {
-        return new SuccessResponse<>(successCode,data);
-    }
-
     public SuccessResponse(SuccessCode successCode,  T dto) {
         this.timestamp = LocalDateTime.now();
         this.status = successCode.getStatusCode().value();

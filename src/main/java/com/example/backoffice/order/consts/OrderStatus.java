@@ -1,6 +1,6 @@
 package com.example.backoffice.order.consts;
 
-import com.example.backoffice.common.exception.ErrorCode;
+
 import com.example.backoffice.order.exception.AlreadyCancelledException;
 import com.example.backoffice.order.exception.AlreadyCompletedException;
 import lombok.Getter;
