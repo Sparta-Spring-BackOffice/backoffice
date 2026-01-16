@@ -149,6 +149,18 @@ public class AdminController {
         adminService.deleteAdmin(loginAdmin.getId(), administratorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PutMapping("/admin/administrators/{administratorId}")
+    public ResponseEntity<UpdateAdminResponse> updateBySuperAdmin(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody UpdateAdminRequest request
+    ) {
+        if (loginAdmin == null) {
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateBySuperAdmin(loginAdmin.getId(), administratorId, request));
+    }
 
     //아직 코드 구현 전
     //관리자 역할 변경
