@@ -63,7 +63,7 @@ public class AdminController {
     }
     //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators")
-    public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
+    public ResponseEntity<SuccessResponse<List<GetAdminResponse>>> getAllAdmins(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String role,
@@ -79,7 +79,7 @@ public class AdminController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(loginAdmin.getId(), keyword, role, status, converted));
+        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getAllAdmins(loginAdmin.getId(), keyword, role, status, converted));
     }
     //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators/{administratorId}")
