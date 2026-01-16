@@ -44,7 +44,7 @@ public class UserService {
         }
 
         List<Long> userIdList = users.map(User::getId).toList();
-        List<UserOrderDto> userOrders = orderRepository.findUserOrderDtoByUserID(userIdList, OrderStatus.CANCELLED);
+        List<UserOrderDto> userOrders = orderRepository.findUserOrderDtoByUserIdList(userIdList, OrderStatus.CANCELLED);
 
         // 유저별 총 상품 수, 총 주문 가격 저장
         // 해당 맵에 유저가 없을 경우 총 상품 수와 총 주문 가격은 0
@@ -69,6 +69,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(ErrorCode.NO_SUCH_USER)
         );
+
+        UserOrderDto userOrderDto = orderRepository.findUserOrderDtoByUserId(user.getId(), OrderStatus.CANCELLED)
+                .orElse(new UserOrderDto(user.getId(),0L ,BigDecimal.ZERO));
+
         return new GetOneUserResponse(
                 user.getId(),
                 user.getName(),
@@ -76,7 +80,9 @@ public class UserService {
                 user.getPhoneNumber(),
                 user.getStatus().getStatus(),
                 user.getCreatedAt(),
-                user.getModifiedAt()
+                user.getModifiedAt(),
+                userOrderDto.getTotalOrderNum(),
+                userOrderDto.getTotalOrderPrice()
         );
     }
 
