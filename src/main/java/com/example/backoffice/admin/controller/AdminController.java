@@ -164,15 +164,15 @@ public class AdminController {
         if (loginAdmin == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
+        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateBySuperAdmin(loginAdmin.getId(), administratorId, request));
     }
 
-//  관리자 역할 변경
+//  관리자 역할 변경(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/role/{administratorId}")
-    public ResponseEntity<UpdateAdminRoleResponse> updateRole(
+    public ResponseEntity<SuccessResponse<UpdateAdminRoleResponse>> updateRole(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRoleRequest request){
-    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateRole(loginAdmin.getId(), administratorId, request));
+        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateRole(loginAdmin.getId(), administratorId, request));
     }
 }
