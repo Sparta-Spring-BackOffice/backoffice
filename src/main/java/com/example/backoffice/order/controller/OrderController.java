@@ -3,6 +3,9 @@ package com.example.backoffice.order.controller;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
+import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.ResponseProcess;
+import com.example.backoffice.common.responsecode.SuccessCode;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.*;
 import com.example.backoffice.order.service.OrderService;
@@ -12,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +25,15 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/admin/orders")
-    public ResponseEntity<CreateOrderResponse> createOrder (@Valid @RequestBody CreateOrderRequest request, @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin) {
+    public ResponseEntity<SuccessResponse<CreateOrderResponse>> createOrder (@Valid @RequestBody CreateOrderRequest request, @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin) {
         if (sessionAdmin == null) {
             throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request, sessionAdmin.getId()));
+        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS, orderService.createOrder(request, sessionAdmin.getId()));
     }
 
     @GetMapping("/admin/orders")
-    public ResponseEntity<Page<GetOrderResponse>> getOrders(
+    public ResponseEntity<SuccessResponse<Page<GetOrderResponse>>> getOrders(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page,
@@ -43,31 +45,31 @@ public class OrderController {
                 pageable.getSort()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.findAllOrders(keyword, converted, status));
+        return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, orderService.findAllOrders(keyword, converted, status));
     }
 
     @GetMapping("/admin/orders/{orderId}")
-    public ResponseEntity<GetOneOrderResponse> getOneOrder(
+    public ResponseEntity<SuccessResponse<GetOneOrderResponse>> getOneOrder(
             @PathVariable Long orderId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin
     ) {
         boolean isAdmin = (sessionAdmin != null);
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.findOneOrder(orderId, isAdmin));
+        return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, orderService.findOneOrder(orderId, isAdmin));
     }
 
     @PutMapping("/admin/orders/{orderId}")
-    public ResponseEntity<ChangedOrderStatusResponse> changedStatusOrder(
+    public ResponseEntity<SuccessResponse<ChangedOrderStatusResponse>> changedStatusOrder(
             @PathVariable Long orderId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.changedStatusOrder(orderId));
+        return ResponseProcess.responseWithBody(SuccessCode.UPDATE_SUCCESS, orderService.changedStatusOrder(orderId));
     }
 
     @PutMapping("/admin/orders/{orderId}/cancelled")
-    public ResponseEntity<Void>  cancelledOrder(
+    public ResponseEntity<SuccessResponse<Void>>  cancelledOrder(
             @PathVariable Long orderId,
             @Valid @RequestBody CancelledOrderRequest requset
     ) {
         orderService.cancelledOrder(orderId,requset);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseProcess.responseWithBuildNewMessage(SuccessCode.UPDATE_SUCCESS,null,"주문이 취소 되었습니다.");
     }
 }
