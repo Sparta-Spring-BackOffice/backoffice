@@ -41,14 +41,14 @@ public class AdminController {
     }
     //내 정보 수정(조건 : 로그인, 권한 수준 : 모든 관리자)
     @PutMapping("/admin/profile/general")
-    public ResponseEntity<UpdateAdminResponse> updateAdmin(
+    public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @Valid @RequestBody UpdateAdminRequest request
     ) {
         if (loginAdmin == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(loginAdmin.getId(), request));
+        return responseWithBody(SuccessCode.UPDATE_SUCCESS,adminService.updateAdmin(loginAdmin.getId(), request));
     }
     //내 패스워드 수정(조건 : 로그인, 권한 수준 : 모든 관리자)
     @PutMapping("/admin/profile/password")
