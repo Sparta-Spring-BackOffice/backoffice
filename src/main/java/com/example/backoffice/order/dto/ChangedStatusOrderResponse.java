@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class ChangedStatusOrderResponse {
 
-    private final String oderStatus;
+    private final String orderStatus;
 
-    public ChangedStatusOrderResponse(String oderStatus) {
-        this.oderStatus = oderStatus;
+    public ChangedStatusOrderResponse(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
