@@ -28,13 +28,13 @@ public class DashboardService {
     @Transactional
     public SummaryStatsResponse summaryStats() {
         Long totalAdmin = adminRepository.count();
-        Long activeAdmin = adminRepository.countByActiveTrue(AdminStatus.ACTIVE);
+        Long activeAdmin = adminRepository.countByActiveStatus(AdminStatus.ACTIVE);
         Long totalUser = userRepository.count();
-        Long activeUser = userRepository.countByActiveTrue(UserStatus.ACTIVE);
+        Long activeUser = userRepository.countByActiveStatus(UserStatus.ACTIVE);
         Long totalProduct = productRepository.count();
-        Long lowStockProduct = productRepository.countBylowStock();
+        Long lowStockProduct = productRepository.countByLowStock();
         Long totalOrder = orderRepository.count();
-        Long todayOrder = orderRepository.countByCreateAt(LocalDateTime.now());
+        Long todayOrder = orderRepository.countByCreatedAt(LocalDateTime.now());
         Long totalReview = reviewRepository.count();
         Double averageReview = reviewRepository.findAverageRating();
 

@@ -24,5 +24,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByNameKeyword(String keyword, Pageable pageable, OrderStatus status);
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt = :createdAt")
-    Long countByCreateAt(LocalDateTime createdAt);
+    Long countByCreatedAt(LocalDateTime createdAt);
 }

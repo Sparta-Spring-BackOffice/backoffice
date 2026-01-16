@@ -28,5 +28,5 @@ public interface AdminRepository extends JpaRepository<Administrator, Long> {
     Optional<Administrator> findByEmail(String email);
 
     @Query("SELECT COUNT(a) FROM Administrator a WHERE a.status = :status")
-    Long countByActiveTrue(AdminStatus status);
+    Long countByActiveStatus(AdminStatus status);
 }
