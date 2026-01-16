@@ -75,6 +75,6 @@ public class ProductController {
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<SuccessResponse<Void>> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return ResponseProcess.responseWithBuild(SuccessCode.LOGIN_SUCCESS, null);
+        return ResponseProcess.responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
     }
 }
