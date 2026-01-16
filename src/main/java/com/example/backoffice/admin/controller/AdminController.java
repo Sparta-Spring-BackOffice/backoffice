@@ -5,7 +5,6 @@ import com.example.backoffice.admin.service.AdminService;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
-import com.example.backoffice.authentification.exception.NotLoginException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +23,9 @@ public class AdminController {
 
     @GetMapping("/admin/administrators")
     public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
-            @RequestParam String keyword,
-            @RequestParam String role,
-            @RequestParam String status,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page
     ) {
@@ -56,9 +55,10 @@ public class AdminController {
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(administratorId, request));
     }
-
-    @PutMapping("/admin/administrators/{administratorId}/reject")
-    public ResponseEntity<Void> rejectAdmin(
+    //동사가 들어가면 안 된대서 명사로 바꿈
+    @PutMapping("/admin/administrators/{administratorId}/denial")
+    //denyAdmin이 더 직관적인 이름 같아서 바꿈
+    public ResponseEntity<Void> denyAdmin(
             @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
@@ -66,21 +66,21 @@ public class AdminController {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-
-        adminService.rejectAdmin(request, loginAdmin.getId(), administratorId );
+    //denyAdmin이 더 직관적인 이름 같아서 바꿈
+        adminService.denyAdmin(request, loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    @PutMapping("/admin/administrators/{administratorId}/approve")
-    public ResponseEntity<Void> approveAdmin(
+    //직관적
+    @PutMapping("/admin/administrators/{administratorId}/activation")
+    public ResponseEntity<Void> activateAdmin(
             @PathVariable Long administratorId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
     ) {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-
-        adminService.approveAdmin(loginAdmin.getId(), administratorId );
+        //직관적이라 바꿈
+        adminService.activateAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -117,31 +117,49 @@ public class AdminController {
 
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(loginAdmin.getId(), request));
     }
+    //deny approve와 같은 형태로 만들어 통일성을 주고자 함. 구조는 requestBody가 없다는 점에서 approve와 완전히 동일
+    //관리자 상태 변경 - suspend
+    @PutMapping("/admin/administrators/{administratorId}/suspension")
+    public ResponseEntity<Void> suspendAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
 
-    //관리자 상태 변경
-    @PutMapping("/admin/administrators/status/{administratorId}")
-    public ResponseEntity<UpdateAdminStatusResponse> updateAdminStatus(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-            @PathVariable Long administratorId,
-            @Valid @RequestBody updateAdminStatusRequest request)
-    {
-    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminStatus(loginAdmin.getId(), administratorId, request));
+        adminService.suspendAdmin(loginAdmin.getId(), administratorId );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    //관리자 상태 변경 - deactivate
+    @PutMapping("/admin/administrators/{administratorId}/deactivation")
+    public ResponseEntity<Void> deactivateAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+
+        adminService.deactivateAdmin(loginAdmin.getId(), administratorId );
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    //아직 코드 구현 전
     //관리자 역할 변경
-    @PutMapping("/admin/administrators/role/{administratorId}")
-    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-            @PathVariable Long administratorId,
-            @Valid @RequestBody updateAdminRoleRequest request){
-    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
-    }
-    //관리자 삭제
-    @DeleteMapping("/admin/administrators/delete/{administratorId}")
-    public ResponseEntity<Void> deleteAdmin(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-            @PathVariable Long administratorId
-    ){
-    adminService.delete(loginAdmin.getId(), administratorId);
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+//    @PutMapping("/admin/administrators/role/{administratorId}")
+//    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
+//            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+//            @PathVariable Long administratorId,
+//            @Valid @RequestBody updateAdminRoleRequest request){
+//    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
+//    }
+//    //관리자 삭제
+//    @DeleteMapping("/admin/administrators/delete/{administratorId}")
+//    public ResponseEntity<Void> deleteAdmin(
+//            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+//            @PathVariable Long administratorId
+//    ){
+//    adminService.delete(loginAdmin.getId(), administratorId);
+//    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//    }
 }
