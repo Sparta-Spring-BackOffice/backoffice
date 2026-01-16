@@ -11,7 +11,8 @@ import com.example.backoffice.order.dto.GetOneOrderResponse;
 import com.example.backoffice.order.dto.GetOrderResponse;
 import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.exception.InsufficientStockException;
-import com.example.backoffice.order.exception.NotAvailableException;
+import com.example.backoffice.order.exception.NotAvailableOrderException;
+import com.example.backoffice.order.exception.OrderNotFoundException;
 import com.example.backoffice.order.exception.OutOfStockException;
 import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.product.consts.ProductStatus;
@@ -58,7 +59,7 @@ public class OrderService {
             throw new InsufficientStockException(ErrorCode.INSUFFICIENT_STOCK);
         }
         if (product.getStatus() == ProductStatus.DISCONTINUED) {
-            throw new NotAvailableException(ErrorCode.NOT_AVAILABLE);
+            throw new NotAvailableOrderException(ErrorCode.NOT_AVAILABLE);
         }
 
         if (product.getStatus() == ProductStatus.SOLD_OUT) {
@@ -115,7 +116,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public GetOneOrderResponse findOneOrder(Long orderId, boolean isAdmin) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 주문입니다.") // 전역예외처리 예정
+                () -> new OrderNotFoundException(ErrorCode.NO_SUCH_ORDER)
         );
 
         return new GetOneOrderResponse(
