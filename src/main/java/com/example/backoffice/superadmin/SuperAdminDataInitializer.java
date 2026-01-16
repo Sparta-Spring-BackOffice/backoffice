@@ -152,7 +152,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 product1
         );
         Review review4 = new Review(
-                2,
+                5,
                 "무난한 제품이지만 가격이 조금 아쉬워요.",
                 order4,
                 product1
