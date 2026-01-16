@@ -21,5 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                   @Param("status") ProductStatus status,
                                   Pageable pageable);
 
-
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.stock < 6")
+    Long countByLowStock();
 }
