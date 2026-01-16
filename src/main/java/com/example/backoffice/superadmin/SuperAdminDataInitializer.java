@@ -136,5 +136,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 //        reviewRepository.save(review1);
 //        reviewRepository.save(review2);
 
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
     }
 }
