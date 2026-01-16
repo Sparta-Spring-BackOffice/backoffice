@@ -1,6 +1,8 @@
 package com.example.backoffice.user.dto;
 
 import lombok.Getter;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,9 +16,9 @@ public class GetUserResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
     private final Long totalOrderNumber;
-    private final Long totalPurchasePrice;
+    private final BigDecimal totalPurchasePrice;
 
-    public GetUserResponse(Long id, String name, String email, String phoneNumber, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, Long totalOrderNumber, Long totalPurchasePrice) {
+    public GetUserResponse(Long id, String name, String email, String phoneNumber, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, Long totalOrderNumber, BigDecimal totalPurchasePrice) {
         this.id = id;
         this.name = name;
         this.email = email;

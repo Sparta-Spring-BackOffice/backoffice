@@ -24,10 +24,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "AND (:status IS NULL OR o.status = :status)")
     Page<Order> findByNameKeyword(String keyword, Pageable pageable, OrderStatus status);
 
-    @Query("SELECT NEW com.example.backoffice.order.dto.UserOrderDto(o.user.id, count(o.user.id), sum() )" +
-            " FROM Order o JOIN o.user u" +
+    @Query("SELECT NEW com.example.backoffice.order.dto.UserOrderDto(o.user.id, count(o.id), sum(o.amount))" +
+            " FROM Order o" +
             " WHERE o.user.id in :userIdList" +
+            " AND o.status != :cancelledStatus" +
             " GROUP BY o.user.id")
-    List<UserOrderDto> findUserOrderDtoByUserID(List<Long> userIdList);
+    List<UserOrderDto> findUserOrderDtoByUserID(List<Long> userIdList, OrderStatus cancelledStatus);
+
+
 }
 

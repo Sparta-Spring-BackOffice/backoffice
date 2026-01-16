@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 public class UserOrderDto {
     private final Long userID;
     private final Long totalOrderNum;
-    private final BigDecimal totalPrice;
+    private final BigDecimal totalOrderPrice;
 
-    public UserOrderDto(Long userID, Long totalOrderNum, BigDecimal totalPrice) {
+    public UserOrderDto(Long userID, Long totalOrderNum, BigDecimal totalOrderPrice) {
         this.userID = userID;
         this.totalOrderNum = totalOrderNum;
-        this.totalPrice = totalPrice;
+        this.totalOrderPrice = totalOrderPrice;
     }
 }
