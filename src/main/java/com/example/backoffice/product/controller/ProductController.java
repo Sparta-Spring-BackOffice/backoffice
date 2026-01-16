@@ -3,6 +3,9 @@ package com.example.backoffice.product.controller;
 import com.example.backoffice.authentification.dto.SessionAdmin;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
+import com.example.backoffice.common.dto.SuccessResponse;
+import com.example.backoffice.common.responsecode.ResponseProcess;
+import com.example.backoffice.common.responsecode.SuccessCode;
 import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.service.ProductService;
@@ -23,15 +26,15 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/admin/products")
-    public ResponseEntity<CreateProductResponse> createProduct(@SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
+    public ResponseEntity<SuccessResponse<CreateProductResponse>> createProduct(@SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
         if (sessionAdmin == null) {
             throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(sessionAdmin.getId(), request, productStatus));
+        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS,productService.createProduct(sessionAdmin.getId(), request, productStatus));
     }
 
     @GetMapping("/admin/products")
-    public ResponseEntity<Page<GetProductResponse>> getAllProduct(
+    public ResponseEntity<SuccessResponse<Page<GetProductResponse>>> getAllProduct(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) ProductStatus productStatus,
@@ -45,6 +48,8 @@ public class ProductController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
+
+        return ResponseProcess.responseWithBody()
         return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProduct(keyword, category, productStatus, converted));
     }
 
