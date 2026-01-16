@@ -13,6 +13,7 @@ import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.exception.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -237,7 +238,7 @@ public class AdminService {
     //(공통기능)관리자 정보 업데이트
     private UpdateAdminResponse updateResponse(Administrator administrator, UpdateAdminRequest request){
         //업데이트
-        administrator.update(request.getName(), request.getEmail(), request.getPhone());
+        administrator.updateGeneral(request.getName(), request.getEmail(), request.getPhone());
 
         adminRepository.flush();
 
@@ -249,6 +250,21 @@ public class AdminService {
                 administrator.getStatus().getStatusName(),
                 administrator.getCreatedAt(),
                 administrator.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public UpdateAdminRoleResponse updateRole(Long loginId, Long targetId, @Valid UpdateAdminRoleRequest request) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
+        //존재하는 관리자인지 검사
+        Administrator administrator = findAndGet(targetId);
+        //업데이트
+        administrator.updateRole(request.getAdminRole());
+        adminRepository.flush();
+        return new UpdateAdminRoleResponse(
+                administrator.getName(),
+                administrator.getRole()
         );
     }
 }

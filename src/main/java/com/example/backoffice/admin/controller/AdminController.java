@@ -162,13 +162,12 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateBySuperAdmin(loginAdmin.getId(), administratorId, request));
     }
 
-    //아직 코드 구현 전
-    //관리자 역할 변경
-//    @PutMapping("/admin/administrators/role/{administratorId}")
-//    public ResponseEntity<UpdateAdminRoleResponse> updateAdminRole(
-//            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-//            @PathVariable Long administratorId,
-//            @Valid @RequestBody updateAdminRoleRequest request){
-//    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
-//    }
+//  관리자 역할 변경
+    @PutMapping("/admin/administrators/role/{administratorId}")
+    public ResponseEntity<UpdateAdminRoleResponse> updateRole(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId,
+            @Valid @RequestBody UpdateAdminRoleRequest request){
+    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateRole(loginAdmin.getId(), administratorId, request));
+    }
 }
