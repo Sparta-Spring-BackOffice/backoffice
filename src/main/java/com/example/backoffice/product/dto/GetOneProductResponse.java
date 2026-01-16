@@ -16,8 +16,15 @@ public class GetOneProductResponse {
     private final LocalDateTime modifiedAt;
     private final String adminName;
     private final String adminEmail;
+    private final Long totalCount;
+    private final Double avgRating;
+    private final Long star1;
+    private final Long star2;
+    private final Long star3;
+    private final Long star4;
+    private final Long star5;
 
-    public GetOneProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String adminName, String adminEmail) {
+    public GetOneProductResponse(Long id, String name, String category, BigDecimal price, Long stock, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String adminName, String adminEmail, Long totalCount, Double avgRating, Long star1, Long star2, Long star3, Long star4, Long star5) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -28,5 +35,12 @@ public class GetOneProductResponse {
         this.modifiedAt = modifiedAt;
         this.adminName = adminName;
         this.adminEmail = adminEmail;
+        this.totalCount = totalCount;
+        this.avgRating = avgRating;
+        this.star1 = star1;
+        this.star2 = star2;
+        this.star3 = star3;
+        this.star4 = star4;
+        this.star5 = star5;
     }
 }

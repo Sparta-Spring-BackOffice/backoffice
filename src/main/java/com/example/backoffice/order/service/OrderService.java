@@ -5,10 +5,7 @@ import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
-import com.example.backoffice.order.dto.CreateOrderRequest;
-import com.example.backoffice.order.dto.CreateOrderResponse;
-import com.example.backoffice.order.dto.GetOneOrderResponse;
-import com.example.backoffice.order.dto.GetOrderResponse;
+import com.example.backoffice.order.dto.*;
 import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.exception.InsufficientStockException;
 import com.example.backoffice.order.exception.NotAvailableOrderException;
@@ -130,10 +127,19 @@ public class OrderService {
                 order.getCreatedAt(),
                 order.getModifiedAt(),
                 order.getStatus().getStatusName(),
-                // 어드민 주문일 경우 데이터 아닐경우 null
                 isAdmin ? order.getProduct().getAdministrator().getName() : null,
                 isAdmin ? order.getProduct().getAdministrator().getEmail(): null,
                 isAdmin ? order.getProduct().getAdministrator().getRole().getRoleName(): null
         );
+    }
+
+    @Transactional
+    public ChangedOrderStatusResponse changedStatusOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException(ErrorCode.NO_SUCH_ORDER)
+        );
+
+        order.statusNext();
+        return new ChangedOrderStatusResponse(order.getStatus().getStatusName());
     }
 }

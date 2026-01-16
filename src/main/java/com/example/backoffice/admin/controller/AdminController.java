@@ -57,26 +57,35 @@ public class AdminController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
     }
-    //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 모든 관리자)
+    //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators")
     public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page
     ) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
         Pageable converted = PageRequest.of(
                 page - 1,
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword, role, status, converted));
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(loginAdmin.getId(), keyword, role, status, converted));
     }
-    //관리자 단건조회(조건 : 로그인, 권한 수준 : 모든 관리자)
+    //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators/{administratorId}")
-    public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
+    public ResponseEntity<GetOneAdminResponse> getOneAdmin(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @PathVariable Long administratorId) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(loginAdmin.getId(), administratorId));
     }
     //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/denial")
@@ -125,8 +134,19 @@ public class AdminController {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-
-        adminService.deactivateAdmin(loginAdmin.getId(), administratorId );
+        adminService.deactivateAdmin(loginAdmin.getId(), administratorId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @DeleteMapping("/admin/administrators/{administratorId}/deletion")
+    public ResponseEntity<Void> deleteAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        adminService.deleteAdmin(loginAdmin.getId(), administratorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -138,14 +158,5 @@ public class AdminController {
 //            @PathVariable Long administratorId,
 //            @Valid @RequestBody updateAdminRoleRequest request){
 //    return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminRole(loginAdmin.getId(), administratorId, request));
-//    }
-//    //관리자 삭제
-//    @DeleteMapping("/admin/administrators/delete/{administratorId}")
-//    public ResponseEntity<Void> deleteAdmin(
-//            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-//            @PathVariable Long administratorId
-//    ){
-//    adminService.delete(loginAdmin.getId(), administratorId);
-//    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 //    }
 }

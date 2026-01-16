@@ -9,6 +9,8 @@ import com.example.backoffice.product.dto.*;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.exception.ProductNotFoundException;
 import com.example.backoffice.product.repository.ProductRepository;
+import com.example.backoffice.review.dto.ProductReviewStatsDto;
+import com.example.backoffice.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public CreateProductResponse createProduct(Long adminId, CreateProductRequest request, ProductStatus productStatus) {
@@ -78,6 +81,9 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException(ErrorCode.NO_SUCH_PRODUCT)
         );
+
+        ProductReviewStatsDto productReviewStatsDto = reviewRepository.getProductReviewStats(productId);
+        double avgRating = Math.round(productReviewStatsDto.getAvgRating() * 10.0) / 10.0;
         return new GetOneProductResponse(
                 product.getId(),
                 product.getName(),
@@ -88,7 +94,14 @@ public class ProductService {
                 product.getCreatedAt(),
                 product.getModifiedAt(),
                 product.getAdministrator().getName(),
-                product.getAdministrator().getEmail()
+                product.getAdministrator().getEmail(),
+                productReviewStatsDto.getTotalCount(),
+                avgRating,
+                productReviewStatsDto.getStar1(),
+                productReviewStatsDto.getStar2(),
+                productReviewStatsDto.getStar3(),
+                productReviewStatsDto.getStar4(),
+                productReviewStatsDto.getStar5()
         );
     }
 
