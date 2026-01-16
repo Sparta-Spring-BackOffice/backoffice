@@ -1,5 +1,6 @@
 package com.example.backoffice.review.controller;
 
+import com.example.backoffice.review.dto.GetOneReviewResponse;
 import com.example.backoffice.review.dto.GetReviewResponse;
 import com.example.backoffice.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,10 @@ public class ReviewController {
        );
 
        return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReview(keyword, converted, rating));
+   }
+
+   @GetMapping("/admin/reviews/{reviewId}")
+    public ResponseEntity<GetOneReviewResponse> getReview(@PathVariable Long  reviewId) {
+       return ResponseEntity.status(HttpStatus.OK).body(reviewService.findOne(reviewId));
    }
 }

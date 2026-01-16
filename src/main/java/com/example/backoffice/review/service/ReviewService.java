@@ -1,5 +1,6 @@
 package com.example.backoffice.review.service;
 
+import com.example.backoffice.review.dto.GetOneReviewResponse;
 import com.example.backoffice.review.dto.GetReviewResponse;
 import com.example.backoffice.review.entity.Review;
 import com.example.backoffice.review.repository.ReviewRepository;
@@ -33,5 +34,22 @@ public class ReviewService {
                 review.getCreatedAt(),
                 review.getModifiedAt()
         ));
+    }
+
+    @Transactional(readOnly = true)
+    public GetOneReviewResponse findOne(Long reviewId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new IllegalStateException("리뷰가 없어요")// 에러 코드 수정 예정
+        );
+        return new GetOneReviewResponse(
+                review.getId(),
+                review.getProduct().getName(),
+                review.getOrder().getUser().getName(),
+                review.getOrder().getUser().getEmail(),
+                review.getRating(),
+                review.getContent(),
+                review.getCreatedAt(),
+                review.getModifiedAt()
+        );
     }
 }
