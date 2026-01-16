@@ -9,6 +9,9 @@ import com.example.backoffice.order.dto.CreateOrderRequest;
 import com.example.backoffice.order.dto.CreateOrderResponse;
 import com.example.backoffice.order.dto.GetOrderResponse;
 import com.example.backoffice.order.entity.Order;
+import com.example.backoffice.order.exception.InsufficientStockException;
+import com.example.backoffice.order.exception.NotAvailableException;
+import com.example.backoffice.order.exception.OutOfStockException;
 import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.entity.Product;
@@ -50,15 +53,15 @@ public class OrderService {
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
 
-        if (request.getQuantity() > product.getStock()) { // 에러 코드 및 멘트 고민중, 수정 예정
-            throw new IllegalArgumentException("재고가 주문 수량보다 부족하여 주문할 수 없습니다.");
+        if (request.getQuantity() > product.getStock()) {
+            throw new InsufficientStockException(ErrorCode.INSUFFICIENT_STOCK);
         }
-        if (product.getStatus() == ProductStatus.DISCONTINUED) { // 에러 코드 및 멘트 고민중, 수정 예정
-            throw new IllegalArgumentException("단종된 상품은 주문할 수 없습니다.");
+        if (product.getStatus() == ProductStatus.DISCONTINUED) {
+            throw new NotAvailableException(ErrorCode.NOT_AVAILABLE);
         }
 
-        if (product.getStatus() == ProductStatus.SOLD_OUT) { // 에러 코드 및 멘트 고민중, 수정 예정
-            throw new IllegalArgumentException("품절된 상품은 주문할 수 없습니다.");
+        if (product.getStatus() == ProductStatus.SOLD_OUT) {
+            throw new OutOfStockException(ErrorCode.OUT_OF_STOCK);
         }
         BigDecimal amount = BigDecimal.valueOf(request.getQuantity()).multiply(product.getPrice());
 
