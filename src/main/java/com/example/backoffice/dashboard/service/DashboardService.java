@@ -4,25 +4,22 @@ import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.dashboard.dto.*;
 import com.example.backoffice.order.consts.OrderStatus;
+import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.product.consts.ProductStatus;
-import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.product.repository.ProductRepository;
 import com.example.backoffice.review.repository.ReviewRepository;
 import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -97,5 +94,21 @@ public class DashboardService {
         List<CategoryDto> countByCategory = productRepository.countByCategoryByName();
 
         return new ChartsStatsResponse(countByReviewRating, countByUserStatus, countByCategory);
+    }
+
+    public List<LateOrderListResponse> lateOrderList() {
+        List<Order> orders = orderRepository.findTop10ByOrderByCreatedAtDesc();
+        List<LateOrderListResponse> dtos = new ArrayList<>();
+        for (Order order : orders) {
+            LateOrderListResponse dto = new LateOrderListResponse(
+                    order.getOrderNumber(),
+                    order.getUser().getName(),
+                    order.getProduct().getName(),
+                    order.getAmount(),
+                    order.getStatus()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
     }
 }
