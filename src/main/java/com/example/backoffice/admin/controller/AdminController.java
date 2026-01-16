@@ -20,7 +20,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-
+    //관리자 가입신청(조건 : 비로그인)
+    @PostMapping("/admin/signup")
+    public ResponseEntity<CreateAdminResponse> signup (
+            @Valid @RequestBody CreateAdminRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
+    }
+    //내 프로필 조회(조건 : 로그인, 권한 수준 : 모든 관리자)
+    @GetMapping("/admin/profile")
+    public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
+    }
+    //내 정보 수정(조건 : 로그인, 권한 수준 : 모든 관리자)
+    @PutMapping("/admin/profile/general")
+    public ResponseEntity<UpdateAdminResponse> updateAdmin(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @Valid @RequestBody UpdateAdminRequest request
+    ) {
+        if (loginAdmin == null) {
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(loginAdmin.getId(), request));
+    }
+    //내 패스워드 수정(조건 : 로그인, 권한 수준 : 모든 관리자)
+    @PutMapping("/admin/profile/password")
+    public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
+            @Valid @RequestBody UpdateAdminPasswordRequest request
+    ) {
+        if (loginAdmin == null) {
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
+    }
+    //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 모든 관리자)
     @GetMapping("/admin/administrators")
     public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
             @RequestParam(required = false) String keyword,
@@ -36,28 +73,13 @@ public class AdminController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword, role, status, converted));
     }
-
-    @PostMapping("/admin/signup")
-    public ResponseEntity<CreateAdminResponse> signup (
-            @Valid @RequestBody CreateAdminRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
-    }
-
+    //관리자 단건조회(조건 : 로그인, 권한 수준 : 모든 관리자)
     @GetMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
     }
-
-    @PutMapping("/admin/administrators/{administratorId}")
-    public ResponseEntity<UpdateAdminResponse> updateAdmin(
-            @PathVariable Long administratorId,
-            @Valid @RequestBody UpdateAdminRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(administratorId, request));
-    }
-    //동사가 들어가면 안 된대서 명사로 바꿈
+    //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/denial")
-    //denyAdmin이 더 직관적인 이름 같아서 바꿈
     public ResponseEntity<Void> denyAdmin(
             @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
@@ -66,11 +88,10 @@ public class AdminController {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-    //denyAdmin이 더 직관적인 이름 같아서 바꿈
         adminService.denyAdmin(request, loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    //직관적
+    //관리자 활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/activation")
     public ResponseEntity<Void> activateAdmin(
             @PathVariable Long administratorId,
@@ -79,46 +100,10 @@ public class AdminController {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        //직관적이라 바꿈
         adminService.activateAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    @GetMapping("/admin/profile")
-    public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
-        if(loginAdmin == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
-    }
-
-    @PutMapping("/admin/profile/password")
-    public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-            @Valid @RequestBody UpdateAdminPasswordRequest request
-    ) {
-        if (loginAdmin == null) {
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
-
-    }
-
-    @PutMapping("/admin/profile")
-    public ResponseEntity<UpdateAdminResponse> updateAdmin(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
-            @Valid @RequestBody UpdateAdminRequest request
-    ) {
-        if (loginAdmin == null) {
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(loginAdmin.getId(), request));
-    }
-    //deny approve와 같은 형태로 만들어 통일성을 주고자 함. 구조는 requestBody가 없다는 점에서 approve와 완전히 동일
-    //관리자 상태 변경 - suspend
+    //관리자 권한정지(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/suspension")
     public ResponseEntity<Void> suspendAdmin(
             @PathVariable Long administratorId,
@@ -131,7 +116,7 @@ public class AdminController {
         adminService.suspendAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    //관리자 상태 변경 - deactivate
+    //관리자 비활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/deactivation")
     public ResponseEntity<Void> deactivateAdmin(
             @PathVariable Long administratorId,
@@ -144,6 +129,7 @@ public class AdminController {
         adminService.deactivateAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     //아직 코드 구현 전
     //관리자 역할 변경
 //    @PutMapping("/admin/administrators/role/{administratorId}")
