@@ -1,6 +1,7 @@
 package com.example.backoffice.user.service;
 
 import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.dto.*;
 import com.example.backoffice.user.entity.User;
@@ -13,11 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public Page<GetUserResponse> findAllUsers(String keyword, Pageable pageable, UserStatus status) {
@@ -33,6 +38,9 @@ public class UserService {
             users = userRepository.findByNameKeyword(searchKeyword,pageable,status);
         }
 
+        List<Long> userIdList = users.map(User::getId).toList();
+        orderRepository.findUserOrderDtoByUserID(userIdList)
+
         return users.map(user -> new GetUserResponse(
                 user.getId(),
                 user.getName(),
@@ -40,7 +48,8 @@ public class UserService {
                 user.getPhoneNumber(),
                 user.getStatus().getStatus(),
                 user.getCreatedAt(),
-                user.getModifiedAt()
+                user.getModifiedAt(),
+                user.getOrders().size(),
         ));
     }
 

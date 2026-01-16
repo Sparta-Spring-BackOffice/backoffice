@@ -1,0 +1,18 @@
+package com.example.backoffice.order.dto;
+
+import lombok.Getter;
+
+import java.math.BigDecimal;
+
+@Getter
+public class UserOrderDto {
+    private final Long userID;
+    private final Long totalOrderNum;
+    private final BigDecimal totalPrice;
+
+    public UserOrderDto(Long userID, Long totalOrderNum, BigDecimal totalPrice) {
+        this.userID = userID;
+        this.totalOrderNum = totalOrderNum;
+        this.totalPrice = totalPrice;
+    }
+}
