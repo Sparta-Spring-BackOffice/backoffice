@@ -28,4 +28,6 @@ WHERE (:keyword IS NULL OR :keyword = ''
             " GROUP BY r.product.id")
     ProductReviewStatsDto getProductReviewStats(Long productId);
 
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r")
+    double findAverageRating();
 }

@@ -12,6 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT o FROM Order o " +
@@ -39,5 +42,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             " AND o.status != :cancelledStatus" +
             " GROUP BY o.user.id")
     Optional<UserOrderDto> findUserOrderDtoByUserId(Long userId, OrderStatus cancelledStatus);
+  
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt = :createdAt")
+    Long countByCreatedAt(LocalDateTime createdAt);
 }
 
