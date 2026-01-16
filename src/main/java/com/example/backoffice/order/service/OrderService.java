@@ -7,6 +7,7 @@ import com.example.backoffice.common.exception.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.CreateOrderRequest;
 import com.example.backoffice.order.dto.CreateOrderResponse;
+import com.example.backoffice.order.dto.GetOneOrderResponse;
 import com.example.backoffice.order.dto.GetOrderResponse;
 import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.repository.OrderRepository;
@@ -106,6 +107,29 @@ public class OrderService {
                 order.getStatus().getStatusName(),
                 order.getProduct().getAdministrator().getName()
         ));
+    }
 
+    @Transactional(readOnly = true)
+    public GetOneOrderResponse findOneOrder(Long orderId, boolean isAdmin) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 주문입니다.") // 전역예외처리 예정
+        );
+
+        return new GetOneOrderResponse(
+                order.getId(),
+                order.getOrderNumber(),
+                order.getUser().getName(),
+                order.getProduct().getName(),
+                order.getProduct().getPrice(),
+                order.getQuantity(),
+                order.getAmount(),
+                order.getCreatedAt(),
+                order.getModifiedAt(),
+                order.getStatus().getStatusName(),
+                // 어드민 주문일 경우 데이터 아닐경우 null
+                isAdmin ? order.getProduct().getAdministrator().getName() : null,
+                isAdmin ? order.getProduct().getAdministrator().getEmail(): null,
+                isAdmin ? order.getProduct().getAdministrator().getStatus().getStatusName(): null
+        );
     }
 }
