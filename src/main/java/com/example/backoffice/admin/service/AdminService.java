@@ -13,6 +13,7 @@ import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,51 +110,36 @@ public class AdminService {
     }
 
     @Transactional
-    public UpdateAdminResponse updateAdmin(Long administratorId, UpdateAdminRequest request) {
-        Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
-                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
-        );
-
-        administrator.update(request.getName(), request.getEmail(), request.getPhone());
-
-        adminRepository.flush();
-
-        return new UpdateAdminResponse(
-                administrator.getName(),
-                administrator.getEmail(),
-                administrator.getPhone(),
-                administrator.getRole().getRoleName(),
-                administrator.getStatus().getStatusName(),
-                administrator.getCreatedAt(),
-                administrator.getModifiedAt()
-        );
+    public UpdateAdminResponse updateAdmin(Long loginId, UpdateAdminRequest request) {
+        //존재하는 관리자인지 검사
+        Administrator administrator = findAndGet(loginId);
+        //값 업데이트
+        return updateResponse(administrator, request);
     }
-    //슈퍼 관리자 검사, 존재 여부 검사 기능을 분리하여 코드 재사용성 UP
+
     @Transactional
     public void denyAdmin(RejectAdminRequest request, Long loginId, Long targetId) {
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
-        Administrator targetAdmin = FindAndGet(targetId);
+        Administrator targetAdmin = findAndGet(targetId);
         //거절
         targetAdmin.deny(request.getDeclineReason());
     }
-    //슈퍼 관리자 검사, 존재 여부 검사 기능을 분리하여 코드 재사용성 UP
+
     @Transactional
-    public void activateAdmin(Long loginId, Long targetId) { //직관적이라 바꿈
+    public void activateAdmin(Long loginId, Long targetId) {
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
-        Administrator targetAdmin = FindAndGet(targetId);
+        Administrator targetAdmin = findAndGet(targetId);
         //활성화
         targetAdmin.activate();
     }
 
     @Transactional
-    public GetAdminProfileResponse getAdminProfile(Long id) {
-        Administrator findAdmin = adminRepository.findById(id).orElseThrow(
-                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
-        );
+    public GetAdminProfileResponse getAdminProfile(Long loginId) {
+        Administrator findAdmin = findAndGet(loginId);
 
         return new GetAdminProfileResponse(
                 findAdmin.getName(),
@@ -163,10 +149,8 @@ public class AdminService {
     }
 
     @Transactional
-    public UpdateAdminPasswordResponse updateAdminPassword(Long id, UpdateAdminPasswordRequest request) {
-        Administrator administrator = adminRepository.findById(id).orElseThrow(
-                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
-        );
+    public UpdateAdminPasswordResponse updateAdminPassword(Long loginId, UpdateAdminPasswordRequest request) {
+        Administrator administrator = findAndGet(loginId);
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), administrator.getPassword())) {
             throw new UnauthorizedException(AuthErrorCode.PASSWORD_MISMATCH_ERROR);
@@ -198,7 +182,7 @@ public class AdminService {
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
-        Administrator targetAdmin = FindAndGet(targetId);
+        Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
         targetAdmin.suspend();
     }
@@ -208,7 +192,7 @@ public class AdminService {
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
-        Administrator targetAdmin = FindAndGet(targetId);
+        Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
         targetAdmin.deactivate();
     }
@@ -224,6 +208,15 @@ public class AdminService {
         adminRepository.deleteById(administratorId);
     }
 
+    @Transactional
+    public UpdateAdminResponse updateBySuperAdmin(Long loginId, Long targetId, UpdateAdminRequest request) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
+        //존재하는 관리자인지 검사
+        Administrator administrator = findAndGet(targetId);
+        //업데이트
+        return updateResponse(administrator, request);
+    }
     //(공통기능)슈퍼 관리자인지 검사
     private void checkSuperAdmin(Long loginId) {
         Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
@@ -235,10 +228,43 @@ public class AdminService {
     }
 
     //(공통기능)존재하는 관리자인지 검사
-    private Administrator FindAndGet(Long targetId) {
+    private Administrator findAndGet(Long targetId) {
         Administrator targetAdmin = adminRepository.findById(targetId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
         return targetAdmin;
+    }
+
+    //(공통기능)관리자 정보 업데이트
+    private UpdateAdminResponse updateResponse(Administrator administrator, UpdateAdminRequest request){
+        //업데이트
+        administrator.updateGeneral(request.getName(), request.getEmail(), request.getPhone());
+
+        adminRepository.flush();
+
+        return new UpdateAdminResponse(
+                administrator.getName(),
+                administrator.getEmail(),
+                administrator.getPhone(),
+                administrator.getRole().getRoleName(),
+                administrator.getStatus().getStatusName(),
+                administrator.getCreatedAt(),
+                administrator.getModifiedAt()
+        );
+    }
+
+    @Transactional
+    public UpdateAdminRoleResponse updateRole(Long loginId, Long targetId, @Valid UpdateAdminRoleRequest request) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
+        //존재하는 관리자인지 검사
+        Administrator administrator = findAndGet(targetId);
+        //업데이트
+        administrator.updateRole(request.getRole());
+        adminRepository.flush();
+        return new UpdateAdminRoleResponse(
+                administrator.getName(),
+                administrator.getRole()
+        );
     }
 }

@@ -43,30 +43,32 @@ public class Administrator extends BaseEntity {
         this.status = adminStatus;
     }
 
-    public void update(String name, String email, String phone) {
+    public void updateGeneral(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-    }
-    //상태명인 ACTIVE와 매칭하는 것이 덜 헷갈릴 것 같아 activate로 바꿈
-    public void activate() {
-        status = AdminStatus.ACTIVE;
-        approvedAt = LocalDateTime.now();
-    }
-    //상태명 DENIED 고려하여 deny로 바꿈
-    public void deny(DeclineReason declineReason) {
-        status = AdminStatus.DENIED;
-        declineFor = declineReason;
     }
 
     public void updatePassword(String password) {
         this.password = password;
     }
-    //상태명 고려
+
+    public void updateRole(AdminRole adminRole){ this.role = adminRole; }
+
+    public void activate() {
+        status = AdminStatus.ACTIVE;
+        approvedAt = LocalDateTime.now();
+    }
+
+    public void deny(DeclineReason declineReason) {
+        status = AdminStatus.DENIED;
+        declineFor = declineReason;
+    }
+
     public void suspend() {
         this.status = AdminStatus.SUSPENDED;
     }
-    //동사로 바꾸려니 이게 제일 나음
+
     public void deactivate() {
         this.status = AdminStatus.NON_ACTIVE;
     }
