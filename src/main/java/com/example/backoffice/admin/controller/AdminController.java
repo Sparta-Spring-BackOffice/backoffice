@@ -156,7 +156,7 @@ public class AdminController {
     }
     //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}")
-    public ResponseEntity<UpdateAdminResponse> updateBySuperAdmin(
+    public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateBySuperAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRequest request
@@ -164,7 +164,7 @@ public class AdminController {
         if (loginAdmin == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.updateBySuperAdmin(loginAdmin.getId(), administratorId, request));
+        return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
 
 //  관리자 역할 변경
