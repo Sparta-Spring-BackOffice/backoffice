@@ -1,12 +1,10 @@
 package com.example.backoffice.order.entity;
 
 import com.example.backoffice.common.config.BaseEntity;
-import com.example.backoffice.common.exception.ErrorCode;
+import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
-import com.example.backoffice.order.exception.AlreadyCompletedException;
 import com.example.backoffice.order.exception.UnableCancelException;
 import com.example.backoffice.product.entity.Product;
-import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

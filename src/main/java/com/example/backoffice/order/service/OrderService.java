@@ -150,5 +150,10 @@ public class OrderService {
         );
 
         order.cancel(requset.getReason());
+
+        Product product = order.getProduct();
+        Long quantity = order.getQuantity();
+
+        product.restoreStock(quantity);
     }
 }
