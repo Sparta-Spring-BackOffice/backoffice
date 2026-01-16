@@ -2,8 +2,7 @@ package com.example.backoffice.dashboard.service;
 
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.repository.AdminRepository;
-import com.example.backoffice.dashboard.dto.SummaryStatsResponse;
-import com.example.backoffice.dashboard.dto.WidgetsStatsResponse;
+import com.example.backoffice.dashboard.dto.*;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.repository.OrderRepository;
 import com.example.backoffice.product.consts.ProductStatus;
@@ -21,6 +20,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -87,5 +89,13 @@ public class DashboardService {
                 lowStockProduct,
                 soldOutProduct
         );
+    }
+
+    public ChartsStatsResponse chartsStats() {
+        List<ReviewRatingDto> countByReviewRating = reviewRepository.countByReviewByRating();
+        List<UserStatusDto> countByUserStatus = userRepository.countByUserByStatus();
+        List<CategoryDto> countByCategory = productRepository.countByCategoryByName();
+
+        return new ChartsStatsResponse(countByReviewRating, countByUserStatus, countByCategory);
     }
 }

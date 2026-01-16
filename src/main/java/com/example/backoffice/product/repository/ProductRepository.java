@@ -1,5 +1,6 @@
 package com.example.backoffice.product.repository;
 
+import com.example.backoffice.dashboard.dto.CategoryDto;
 import com.example.backoffice.product.consts.ProductStatus;
 import com.example.backoffice.product.entity.Product;
 import com.example.backoffice.review.dto.ProductReviewStatsDto;
@@ -26,4 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT COUNT(p) FROM Product p WHERE p.status = :status")
     Long countBySoldOutStatus(ProductStatus status);
+
+    @Query("SELECT new com.example.backoffice.dashboard.dto.CategoryDto(p.category, count(p)) " +
+           "FROM Product p GROUP BY p.category")
+    List<CategoryDto> countByCategoryByName();
 }

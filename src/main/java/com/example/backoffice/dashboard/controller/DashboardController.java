@@ -1,5 +1,6 @@
 package com.example.backoffice.dashboard.controller;
 
+import com.example.backoffice.dashboard.dto.ChartsStatsResponse;
 import com.example.backoffice.dashboard.dto.SummaryStatsResponse;
 import com.example.backoffice.dashboard.dto.WidgetsStatsResponse;
 import com.example.backoffice.dashboard.service.DashboardService;
@@ -22,5 +23,10 @@ public class DashboardController {
     @GetMapping("/admin/dashboards/widgets")
     public ResponseEntity<WidgetsStatsResponse> widgetsStats() {
         return ResponseEntity.status(HttpStatus.OK).body(dashboardService.widgetsStats());
+    }
+
+    @GetMapping("/admin/dashboards/charts")
+    public ResponseEntity<ChartsStatsResponse> chartsStats() {
+        return ResponseEntity.status(HttpStatus.OK).body(dashboardService.chartsStats());
     }
 }
