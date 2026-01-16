@@ -83,13 +83,13 @@ public class AdminController {
     }
     //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @GetMapping("/admin/administrators/{administratorId}")
-    public ResponseEntity<GetOneAdminResponse> getOneAdmin(
+    public ResponseEntity<SuccessResponse<GetOneAdminResponse>> getOneAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @PathVariable Long administratorId) {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(loginAdmin.getId(), administratorId));
+        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getOneAdmin(loginAdmin.getId(), administratorId));
     }
     //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PutMapping("/admin/administrators/{administratorId}/denial")
