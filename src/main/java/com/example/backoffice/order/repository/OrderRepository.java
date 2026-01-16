@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT o FROM Order o " +
@@ -19,4 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE (:keyword IS NULL OR u.name LIKE %:keyword%) " +
             "AND (:status IS NULL OR o.status = :status)")
     Page<Order> findByNameKeyword(String keyword, Pageable pageable, OrderStatus status);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt = :createdAt")
+    Long countByCreateAt(LocalDateTime createdAt);
 }

@@ -1,5 +1,6 @@
 package com.example.backoffice.admin.repository;
 
+import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.entity.Administrator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,7 @@ public interface AdminRepository extends JpaRepository<Administrator, Long> {
 
     boolean existsByEmail(String email);
     Optional<Administrator> findByEmail(String email);
+
+    @Query("SELECT COUNT(a) FROM Administrator a WHERE a.status = :status")
+    Long countByActiveTrue(AdminStatus status);
 }

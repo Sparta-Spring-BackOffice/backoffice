@@ -19,4 +19,6 @@ WHERE (:keyword IS NULL OR :keyword = ''
                                         @Param("rating") Integer rating,
                                         Pageable pageable);
 
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r")
+    double findAverageRating();
 }

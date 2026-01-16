@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
             "AND (:status IS NULL OR u.status = :status)")
     Page<User> findByNameKeyword(String keyword, Pageable pageable, UserStatus status);
 
+    @Query("SELECT COUNT(u) FROM User u WHERE u.status = :status")
+    Long countByActiveTrue(UserStatus status);
 }
