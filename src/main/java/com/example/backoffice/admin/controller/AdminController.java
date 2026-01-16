@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-
+    //관리자 목록 조회
     @GetMapping("/admin/administrators")
     public ResponseEntity<List<GetAdminResponse>> getAllAdmins(
             @RequestParam(required = false) String keyword,
@@ -36,18 +36,18 @@ public class AdminController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmins(keyword, role, status, converted));
     }
-
+    //관리자 신규등록
     @PostMapping("/admin/signup")
     public ResponseEntity<CreateAdminResponse> signup (
             @Valid @RequestBody CreateAdminRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.create(request));
     }
-
+    //관리자 단건조회
     @GetMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<GetOneAdminResponse> getOneAdmin(@PathVariable Long administratorId) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getOneAdmin(administratorId));
     }
-
+    //
     @PutMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<UpdateAdminResponse> updateAdmin(
             @PathVariable Long administratorId,
@@ -83,7 +83,7 @@ public class AdminController {
         adminService.activateAdmin(loginAdmin.getId(), administratorId );
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
+    //관리자 프로필 조회
     @GetMapping("/admin/profile")
     public ResponseEntity<GetAdminProfileResponse> getAdminProfile(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin) {
@@ -92,7 +92,7 @@ public class AdminController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminProfile(loginAdmin.getId()));
     }
-
+    //관리자 패스워드 수정
     @PutMapping("/admin/profile/password")
     public ResponseEntity<UpdateAdminPasswordResponse> updateAdminPassword(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
@@ -105,7 +105,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdminPassword(loginAdmin.getId(), request));
 
     }
-
+    //관리자 개인정보 수정
     @PutMapping("/admin/profile")
     public ResponseEntity<UpdateAdminResponse> updateAdmin(
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
