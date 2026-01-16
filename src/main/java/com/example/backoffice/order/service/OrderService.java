@@ -142,4 +142,13 @@ public class OrderService {
         order.statusNext();
         return new ChangedOrderStatusResponse(order.getStatus().getStatusName());
     }
+
+    @Transactional
+    public void cancelledOrder(Long orderId, CancelledOrderRequest requset) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException(ErrorCode.NO_SUCH_ORDER)
+        );
+
+        order.cancel(requset.getReason());
+    }
 }
