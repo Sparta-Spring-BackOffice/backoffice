@@ -222,4 +222,14 @@ public class AdminService {
         //상태 변경
         targetAdmin.deactivate();
     }
+
+    public void deleteAdmin(Long loginId, Long administratorId) {
+        //슈퍼 관리자인지 검사
+        checkSuperAdmin(loginId);
+        //존재하는 관리자인지만 검사
+        boolean existence = adminRepository.existsById(administratorId);
+        if(!existence) throw new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND);
+        //상태 변경
+        adminRepository.deleteById(administratorId);
+    }
 }

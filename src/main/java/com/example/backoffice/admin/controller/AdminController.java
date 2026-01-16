@@ -125,11 +125,21 @@ public class AdminController {
         if(loginAdmin == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-
-        adminService.deactivateAdmin(loginAdmin.getId(), administratorId );
+        adminService.deactivateAdmin(loginAdmin.getId(), administratorId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
+    //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @DeleteMapping("/admin/administrators/{administratorId}/deletion")
+    public ResponseEntity<Void> deleteAdmin(
+            @PathVariable Long administratorId,
+            @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
+    ) {
+        if(loginAdmin == null){
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        adminService.deleteAdmin(loginAdmin.getId(), administratorId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
     //아직 코드 구현 전
     //관리자 역할 변경
 //    @PutMapping("/admin/administrators/role/{administratorId}")
