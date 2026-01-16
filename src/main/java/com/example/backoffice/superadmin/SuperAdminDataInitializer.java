@@ -98,9 +98,9 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
 
 // ===== 주문 생성 =====
         Order order1 = new Order(
-                "ORDER-20260116-001",
-                3L,
-                BigDecimal.valueOf(100000),
+                "ORDER-20260113-001",
+                1L,
+                new BigDecimal(String.valueOf(product1.getPrice())),
                 OrderStatus.READY,
                 user1,
                 product1
@@ -109,65 +109,32 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
         Order order2 = new Order(
                 "ORDER-20260116-002",
                 2L,
-                BigDecimal.valueOf(55000),
-                OrderStatus.COMPLETED,
-                user2,
-                product1
-        );
-
-        Order order3 = new Order(
-                "ORDER-20260116-003",
-                4L,
-                BigDecimal.valueOf(55000),
-                OrderStatus.IN_TRANSIT,
-                user1,
-                product1
-        );
-
-        Order order4 = new Order(
-                "ORDER-20260116-004",
-                4L,
-                BigDecimal.valueOf(55000),
+                new BigDecimal(String.valueOf(product2.getPrice())),
                 OrderStatus.CANCELLED,
-                user1,
-                product1
+                user2,
+                product2
         );
 
         orderRepository.save(order1);
         orderRepository.save(order2);
-        orderRepository.save(order3);
-        orderRepository.save(order4);
 
 // ===== 리뷰 생성 =====
         Review review1 = new Review(
                 5,
-                "배송도 빠르고 상품 상태가 정말 좋습니다1.",
+                "배송도 빠르고 상품 상태가 정말 좋습니다.",
                 order1,
-                product1
-        );
-        Review review3 = new Review(
-                3,
-                "무난한 제품이지만 가격이 조금 아쉬워요2.",
-                order3,
-                product1
-        );
-        Review review4 = new Review(
-                5,
-                "무난한 제품이지만 가격이 조금 아쉬워요3.",
-                order4,
                 product1
         );
 
         Review review2 = new Review(
                 3,
-                "무난한 제품이지만 가격이 조금 아쉬워요4.",
+                "무난한 제품이지만 가격이 조금 아쉬워요.",
                 order2,
-                product1
+                product2
         );
 
         reviewRepository.save(review1);
         reviewRepository.save(review2);
-        reviewRepository.save(review3);
-        reviewRepository.save(review4);
+
     }
 }
