@@ -1,5 +1,6 @@
 package com.example.backoffice.review.repository;
 
+import com.example.backoffice.dashboard.dto.ReviewRatingDto;
 import com.example.backoffice.review.dto.LatestReviewDto;
 import com.example.backoffice.review.dto.ProductReviewStatsDto;
 import com.example.backoffice.review.entity.Review;
@@ -37,5 +38,10 @@ WHERE (:keyword IS NULL OR :keyword = ''
             " WHERE r.product.id = :productId" +
             " order by r.createdAt desc ")
     List<LatestReviewDto> findLatestReviewDto(Long productId, Pageable pageable);
+           
+    @Query("SELECT new com.example.backoffice.dashboard.dto.ReviewRatingDto(r.rating, COUNT(r)) "+
+           "FROM Review r GROUP BY r.rating")
+    List<ReviewRatingDto> countByReviewByRating();       
+           
 }
 
