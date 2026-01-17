@@ -6,6 +6,8 @@ import com.example.backoffice.authentification.exception.AuthentificationExcepti
 import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.common.dto.ErrorResponse;
 import com.example.backoffice.common.exception.CommonException;
+import com.example.backoffice.order.exception.OrderException;
+import com.example.backoffice.product.exception.ProductException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,19 @@ public class GlobalExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<ErrorResponse> OrderExceptionHandler(OrderException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
+        return ResponseEntity.status(e.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorResponse> ProductExceptionHandler(ProductException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
+        return ResponseEntity.status(e.getStatus()).body(errorResponse);
+    }
+
     @ExceptionHandler(LoginDeniedException.class)
     public ResponseEntity<ErrorResponse> DeniedHandler(LoginDeniedException e, HttpServletRequest request) {
         String base = e.getAuthErrorCode().getMessage();

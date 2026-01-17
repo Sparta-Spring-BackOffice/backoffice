@@ -67,9 +67,9 @@ public class OrderController {
     @PutMapping("/admin/orders/{orderId}/cancelled")
     public ResponseEntity<SuccessResponse<Void>>  cancelledOrder(
             @PathVariable Long orderId,
-            @Valid @RequestBody CancelledOrderRequest requset
+            @Valid @RequestBody CancelledOrderRequest request
     ) {
-        orderService.cancelledOrder(orderId,requset);
+        orderService.cancelledOrder(orderId,request);
         return ResponseProcess.responseWithBuildNewMessage(SuccessCode.UPDATE_SUCCESS,null,"주문이 취소 되었습니다.");
     }
 }

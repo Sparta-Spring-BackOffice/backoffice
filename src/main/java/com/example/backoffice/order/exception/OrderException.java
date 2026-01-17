@@ -6,12 +6,12 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class OrderException extends RuntimeException {
 
-    public HttpStatus httpStatus;
+    public HttpStatus status;
     public ErrorCode errorCode;
 
     public OrderException(HttpStatus httpStatus, ErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.httpStatus = httpStatus;
+        this.status = httpStatus;
         this.errorCode = errorCode;
     }
 }
