@@ -1,5 +1,6 @@
 package com.example.backoffice.authentification.controller;
 
+import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.dto.SessionAdmin;
@@ -40,8 +41,7 @@ public class AuthentificationController {
         if(loginUser != null){
             throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
-        String token = jwtUtil.generateToken(request.getEmail()); //jwt 기능
-        LoginResponse loginResponse = authentificationService.login(request, token);
+        LoginResponse loginResponse = authentificationService.login(request);
 
         SessionAdmin sessionAdmin = new SessionAdmin(
                 loginResponse.getId(),
@@ -68,5 +68,4 @@ public class AuthentificationController {
 
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
-
 }

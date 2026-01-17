@@ -22,12 +22,15 @@ public class JwtUtil {
     }
 
     // JWT 생성
-    public String generateToken(String userId) {
+    public String generateToken(Long userId, String userEmail, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(userEmail)
+                .claim("userId", userId)
+                .claim("email", userEmail)
+                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

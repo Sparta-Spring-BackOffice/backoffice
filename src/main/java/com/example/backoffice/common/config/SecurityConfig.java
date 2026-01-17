@@ -32,16 +32,11 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll() // 접근 권한 설정, 로그인은 인증 없이 허용
+                        .requestMatchers("/admin/login", "/admin/signup").permitAll() // 접근 권한 설정, 로그인은 인증 없이 허용
                         .anyRequest().authenticated() // 나머지는 JWT 필수
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // 비밀번호 암호화용
     }
 }
