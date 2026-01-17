@@ -71,6 +71,7 @@ public class AdminService {
         );
 
         return new GetOneAdminResponse(
+                administrator.getId(),
                 administrator.getName(),
                 administrator.getEmail(),
                 administrator.getPhone(),
@@ -100,6 +101,7 @@ public class AdminService {
         adminRepository.save(admin);
         return new CreateAdminResponse(
           "관리자 계정이 성공적으로 생성되었습니다.",
+                admin.getId(),
                 admin.getName(),
                 admin.getEmail(),
                 admin.getPhone(),
@@ -142,6 +144,7 @@ public class AdminService {
         Administrator findAdmin = findAndGet(loginId);
 
         return new GetAdminProfileResponse(
+                findAdmin.getId(),
                 findAdmin.getName(),
                 findAdmin.getEmail(),
                 findAdmin.getPhone()
@@ -243,6 +246,7 @@ public class AdminService {
         adminRepository.flush();
 
         return new UpdateAdminResponse(
+                administrator.getId(),
                 administrator.getName(),
                 administrator.getEmail(),
                 administrator.getPhone(),
@@ -263,6 +267,7 @@ public class AdminService {
         administrator.updateRole(request.getRole());
         adminRepository.flush();
         return new UpdateAdminRoleResponse(
+                administrator.getId(),
                 administrator.getName(),
                 administrator.getRole()
         );
