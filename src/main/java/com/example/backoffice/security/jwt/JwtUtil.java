@@ -15,7 +15,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration} * 24")
     private Long expiration; // 밀리초 단위 (예: 3600000 = 1시간)
 
     private Key getSigningKey() {
@@ -45,18 +45,14 @@ public class JwtUtil {
 
         } catch (ExpiredJwtException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_EXPIRED);
-
         } catch (SignatureException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_INVALID_SIGNATURE);
         } catch (io.jsonwebtoken.security.SecurityException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_INVALID_SIGNATURE);
-        }
-        catch (MalformedJwtException e) {
+        } catch (MalformedJwtException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_MALFORMED);
-
         } catch (UnsupportedJwtException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_UNSUPPORTED);
-
         } catch (JwtException | IllegalArgumentException e) {
             throw new UnauthorizedException(AuthErrorCode.TOKEN_INVALID);
         }
@@ -70,18 +66,5 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims;
-    }
-
-    // JWT 유효성 검증
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
     }
 }
