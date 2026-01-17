@@ -37,7 +37,7 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        String encryptedPassword = passwordEncoder.encode("123456789");
+        String encryptedPassword = passwordEncoder.encode("12345678");
 
         Administrator superAdmin = new Administrator(
                 "함형우",
