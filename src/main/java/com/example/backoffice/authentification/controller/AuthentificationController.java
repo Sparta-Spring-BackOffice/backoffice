@@ -1,6 +1,5 @@
 package com.example.backoffice.authentification.controller;
 
-import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.dto.SessionAdmin;
@@ -15,10 +14,7 @@ import com.example.backoffice.common.responsecode.SuccessCode;
 import com.example.backoffice.security.jwt.JwtUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -49,15 +45,11 @@ public class AuthentificationController {
     }
 
     @PostMapping("/admin/logout")
-    public ResponseEntity<SuccessResponse<Void>> logout(
-            @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin,
-            HttpSession session
-    ){
-        if(sessionAdmin == null){
+    public ResponseEntity<SuccessResponse<Void>> logout(Authentication auth){
+
+        if(auth.getPrincipal() == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-        session.invalidate();
-
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,11 +26,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/admin/orders")
-    public ResponseEntity<SuccessResponse<CreateOrderResponse>> createOrder (@Valid @RequestBody CreateOrderRequest request, @SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin) {
-        if (sessionAdmin == null) {
-            throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
-        }
-        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS, orderService.createOrder(request, sessionAdmin.getId()));
+    public ResponseEntity<SuccessResponse<CreateOrderResponse>> createOrder (@Valid @RequestBody CreateOrderRequest request, Authentication auth) {
+
+        Long adminId = (Long) auth.getPrincipal();
+        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS, orderService.createOrder(request, adminId));
     }
 
     @GetMapping("/admin/orders")
@@ -44,7 +44,6 @@ public class OrderController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-
         return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, orderService.findAllOrders(keyword, converted, status));
     }
 
