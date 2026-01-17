@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,24 +33,15 @@ public class AuthentificationController {
     @PostMapping("/admin/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
-            HttpSession session,
-            @SessionAttribute(name="loginUser", required = false) SessionAdmin loginUser
+            Authentication auth
     ) {
-        if(loginUser != null){
+        if(auth != null){
             throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
+
         LoginResponse loginResponse = authentificationService.login(request);
 
-        SessionAdmin sessionAdmin = new SessionAdmin(
-                loginResponse.getId(),
-                loginResponse.getEmail(),
-                loginResponse.getRole(),
-                loginResponse.getToken());
-
-        session.setAttribute("loginUser", sessionAdmin);
-
         return ResponseProcess.responseWithBody(SuccessCode.LOGIN_SUCCESS, loginResponse);
-
     }
 
     @PostMapping("/admin/logout")

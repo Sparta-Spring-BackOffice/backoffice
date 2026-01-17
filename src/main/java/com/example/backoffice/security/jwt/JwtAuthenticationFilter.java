@@ -84,8 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                    AuthErrorCode code) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
-
-        String path = request.getRequestURI();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         ErrorResponse body = ErrorResponse.of(
                 HttpStatus.UNAUTHORIZED,
