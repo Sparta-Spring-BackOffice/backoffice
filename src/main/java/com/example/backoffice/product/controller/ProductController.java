@@ -18,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,11 +28,12 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/admin/products")
-    public ResponseEntity<SuccessResponse<CreateProductResponse>> createProduct(@SessionAttribute(name = "loginUser", required = false) SessionAdmin sessionAdmin, @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
-        if (sessionAdmin == null) {
-            throw new LoginFailException(AuthErrorCode.NOT_LOGIN);
-        }
-        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS,productService.createProduct(sessionAdmin.getId(), request, productStatus));
+    public ResponseEntity<SuccessResponse<CreateProductResponse>> createProduct(
+            Authentication authentication,
+            @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
+        Long adminId = (Long) authentication.getPrincipal();
+
+        return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS,productService.createProduct(adminId, request, productStatus));
     }
 
     @GetMapping("/admin/products")
