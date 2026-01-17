@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetOneAdminResponse {
+    private final Long id;
     private final String name;
     private final String email;
     private final String phone;
@@ -15,7 +16,8 @@ public class GetOneAdminResponse {
     private final LocalDateTime modifiedAt;
     private final LocalDateTime approvedAt;
 
-    public GetOneAdminResponse(String name, String email, String phone, String role, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime approvedAt) {
+    public GetOneAdminResponse(Long id, String name, String email, String phone, String role, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime approvedAt) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
