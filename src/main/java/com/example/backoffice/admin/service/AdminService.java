@@ -13,7 +13,7 @@ import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
-import com.example.backoffice.security.jwt.JwtUtil;
+import com.example.backoffice.jwt.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

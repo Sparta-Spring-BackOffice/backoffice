@@ -1,4 +1,4 @@
-package com.example.backoffice.security.jwt;
+package com.example.backoffice.jwt;
 
 import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.authentification.exception.AuthErrorCode;

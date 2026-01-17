@@ -1,4 +1,4 @@
-package com.example.backoffice.security.jwt;
+package com.example.backoffice.jwt;
 
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
@@ -20,7 +20,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component

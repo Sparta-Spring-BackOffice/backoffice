@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,8 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateAdmin(
             Authentication auth,
             @Valid @RequestBody UpdateAdminRequest request
-    ) {
+    )
+    {
         if (auth == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -54,11 +56,12 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<UpdateAdminPasswordResponse>> updateAdminPassword(
             Authentication auth,
             @Valid @RequestBody UpdateAdminPasswordRequest request
-    ) {
-
+    )
+    {
         return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateAdminPassword((Long) auth.getPrincipal(), request));
     }
     //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/admin/administrators")
     public ResponseEntity<SuccessResponse<List<GetAdminResponse>>> getAllAdmins(
             Authentication auth,
@@ -67,7 +70,8 @@ public class AdminController {
             @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -79,6 +83,7 @@ public class AdminController {
         return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getAllAdmins((Long)auth.getPrincipal(), keyword, role, status, converted));
     }
     //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<SuccessResponse<GetOneAdminResponse>> getOneAdmin(
             Authentication auth,
@@ -89,12 +94,14 @@ public class AdminController {
         return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getOneAdmin((Long)auth.getPrincipal(), administratorId));
     }
     //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/denial")
     public ResponseEntity<SuccessResponse<Void>> denyAdmin(
             @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
             Authentication auth
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -102,11 +109,13 @@ public class AdminController {
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/activation")
     public ResponseEntity<SuccessResponse<Void>> activateAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -114,24 +123,27 @@ public class AdminController {
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 권한정지(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/suspension")
     public ResponseEntity<SuccessResponse<Void>> suspendAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
-
         adminService.suspendAdmin((Long)auth.getPrincipal(), administratorId );
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 비활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/deactivation")
     public ResponseEntity<SuccessResponse<Void>> deactivateAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -139,11 +151,13 @@ public class AdminController {
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/admin/administrators/{administratorId}/deletion")
     public ResponseEntity<SuccessResponse<Void>> deleteAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    ) {
+    )
+    {
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -151,12 +165,14 @@ public class AdminController {
         return responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
     }
     //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateBySuperAdmin(
             Authentication auth,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRequest request
-    ) {
+    )
+    {
         if (auth == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -164,6 +180,7 @@ public class AdminController {
     }
 
 //  관리자 역할 변경(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/role/{administratorId}")
     public ResponseEntity<SuccessResponse<UpdateAdminRoleResponse>> updateRole(
             Authentication auth,

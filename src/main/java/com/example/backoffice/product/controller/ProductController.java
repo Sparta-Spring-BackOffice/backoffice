@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +28,13 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
 
+    @PreAuthorize("hasRole('SUPER_ADMIN') AND hasRole('OP_ADMIN')")
     @PostMapping("/admin/products")
     public ResponseEntity<SuccessResponse<CreateProductResponse>> createProduct(
             Authentication auth,
-            @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
+            @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus
+    )
+    {
         Long adminId = (Long) auth.getPrincipal();
 
         return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS,productService.createProduct(adminId, request, productStatus));
@@ -43,7 +47,6 @@ public class ProductController {
             @RequestParam(required = false) ProductStatus productStatus,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(defaultValue = "1") int page
-
     )
     {
         Pageable converted = PageRequest.of(
@@ -51,7 +54,6 @@ public class ProductController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-
         return ResponseProcess.responseWithBodyNewMessage(SuccessCode.READ_SUCCESS , productService.findAllProduct(keyword, category, productStatus, converted), "상품 리스트 조회에 성공하였습니다");
     }
 

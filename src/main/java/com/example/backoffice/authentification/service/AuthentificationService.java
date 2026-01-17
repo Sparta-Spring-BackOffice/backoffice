@@ -1,6 +1,5 @@
 package com.example.backoffice.authentification.service;
 
-import com.example.backoffice.admin.consts.DeclineReason;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.consts.AuthStatus;
@@ -10,7 +9,7 @@ import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.common.config.PasswordEncoder;
-import com.example.backoffice.security.jwt.JwtUtil;
+import com.example.backoffice.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
