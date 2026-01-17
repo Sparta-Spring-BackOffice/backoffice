@@ -10,6 +10,7 @@ import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.common.config.PasswordEncoder;
+import com.example.backoffice.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthentificationService {
     private final AdminRepository adminRepository;
+    private final JwtUtil jwtUtil;
     private final PasswordEncoder pe;
 
     @Transactional
@@ -41,12 +43,14 @@ public class AuthentificationService {
             case NON_ACTIVE -> throw new LoginFailException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
         }
 
+        String token = jwtUtil.generateToken(admin.getId(), admin.getEmail(), admin.getRole().getRoleName());
 
         return new LoginResponse(
                 admin.getId(),
                 admin.getEmail(),
                 admin.getRole(),
-                AuthStatus.LOGIN_SUCCESS
+                AuthStatus.LOGIN_SUCCESS,
+                token
         );
     }
  }

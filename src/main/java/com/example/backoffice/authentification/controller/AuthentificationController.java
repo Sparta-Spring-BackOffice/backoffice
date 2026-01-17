@@ -1,5 +1,6 @@
 package com.example.backoffice.authentification.controller;
 
+import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.authentification.dto.LoginRequest;
 import com.example.backoffice.authentification.dto.LoginResponse;
 import com.example.backoffice.authentification.dto.SessionAdmin;
@@ -7,9 +8,11 @@ import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.authentification.service.AuthentificationService;
+import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.dto.SuccessResponse;
 import com.example.backoffice.common.responsecode.ResponseProcess;
 import com.example.backoffice.common.responsecode.SuccessCode;
+import com.example.backoffice.security.jwt.JwtUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequiredArgsConstructor
 public class AuthentificationController {
     private final AuthentificationService authentificationService;
+    private final JwtUtil jwtUtil; //Jwt 유틸리티
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/admin/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(
@@ -41,7 +46,8 @@ public class AuthentificationController {
         SessionAdmin sessionAdmin = new SessionAdmin(
                 loginResponse.getId(),
                 loginResponse.getEmail(),
-                loginResponse.getRole());
+                loginResponse.getRole(),
+                loginResponse.getToken());
 
         session.setAttribute("loginUser", sessionAdmin);
 
@@ -59,8 +65,6 @@ public class AuthentificationController {
         }
         session.invalidate();
 
-
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
-
 }

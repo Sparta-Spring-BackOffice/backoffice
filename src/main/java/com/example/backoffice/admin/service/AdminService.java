@@ -13,6 +13,7 @@ import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
+import com.example.backoffice.security.jwt.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.util.List;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
     public List<GetAdminResponse> getAllAdmins(Long loginId, String keyword, String role, String status, Pageable pageable) {
@@ -113,6 +115,7 @@ public class AdminService {
 
     @Transactional
     public UpdateAdminResponse updateAdmin(Long loginId, UpdateAdminRequest request) {
+
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(loginId);
         //값 업데이트

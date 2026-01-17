@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,9 +56,7 @@ public class AdminController {
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin,
             @Valid @RequestBody UpdateAdminPasswordRequest request
     ) {
-        if (loginAdmin == null) {
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
+
         return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateAdminPassword(loginAdmin.getId(), request));
     }
     //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
