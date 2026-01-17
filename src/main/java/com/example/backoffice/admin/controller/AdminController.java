@@ -29,7 +29,7 @@ public class AdminController {
     @PostMapping("/admin/signup")
     public ResponseEntity<SuccessResponse<CreateAdminResponse>> signup (
             @Valid @RequestBody CreateAdminRequest request){
-        return responseWithBody(SuccessCode.LOGIN_SUCCESS, adminService.create(request));
+        return responseWithBody(SuccessCode.CREATE_SUCCESS, adminService.create(request));
     }
     //내 프로필 조회(조건 : 로그인, 권한 수준 : 모든 관리자)
     @GetMapping("/admin/profile")

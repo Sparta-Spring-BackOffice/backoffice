@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 
 @Getter
 public class UpdateAdminStatusResponse {
+    private final Long id;
     private final AdminStatus adminStatus;
     private final LocalDateTime modifiedAt;
 
-    public UpdateAdminStatusResponse(AdminStatus adminStatus, LocalDateTime modifiedAt) {
+    public UpdateAdminStatusResponse(Long id, AdminStatus adminStatus, LocalDateTime modifiedAt) {
+        this.id = id;
         this.adminStatus = adminStatus;
         this.modifiedAt = modifiedAt;
     }
