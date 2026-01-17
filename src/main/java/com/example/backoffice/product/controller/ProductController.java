@@ -29,9 +29,9 @@ public class ProductController {
 
     @PostMapping("/admin/products")
     public ResponseEntity<SuccessResponse<CreateProductResponse>> createProduct(
-            Authentication authentication,
+            Authentication auth,
             @Valid @RequestBody CreateProductRequest request, ProductStatus productStatus){
-        Long adminId = (Long) authentication.getPrincipal();
+        Long adminId = (Long) auth.getPrincipal();
 
         return ResponseProcess.responseWithBody(SuccessCode.CREATE_SUCCESS,productService.createProduct(adminId, request, productStatus));
     }
