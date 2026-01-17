@@ -31,7 +31,7 @@ public class UserService {
     private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
-    public Page<GetUserResponse> findAllUsers(String keyword, Pageable pageable, UserStatus status) {
+    public  Page<GetUserResponse> findAllUsers(String keyword, Pageable pageable, UserStatus status) {
 
         // 빈 문자열(keyword)을 null로 바꾸기 위함
         String searchKeyword = (keyword == null || keyword.isEmpty()) ? null : keyword;
