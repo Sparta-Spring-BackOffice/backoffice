@@ -1,6 +1,8 @@
 package com.example.backoffice.security.jwt;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             if (jwtUtil.validateToken(token)) {
-                String userId = jwtUtil.getUserIdFromToken(token);
+                String userId = String.valueOf(jwtUtil.getUserIdFromToken(token));
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
@@ -43,11 +45,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-
         filterChain.doFilter(request, response);
+    }
+
+    private Authentication getAuthentication(String token) {
+        Claims claims = jwtUtil.getUserIdFromToken(token);
+
+        Long id = claims.get("id", Long.class);
+
+        return new UsernamePasswordAuthenticationToken(
+                id, null, new ArrayList<>());
     }
 }

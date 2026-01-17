@@ -22,13 +22,13 @@ public class JwtUtil {
     }
 
     // JWT 생성
-    public String generateToken(Long userId, String userEmail, String role) {
+    public String generateToken(Long Id, String userEmail, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
                 .setSubject(userEmail)
-                .claim("userId", userId)
+                .claim("id", Id)
                 .claim("email", userEmail)
                 .claim("role", role)
                 .setIssuedAt(now)
@@ -38,14 +38,13 @@ public class JwtUtil {
     }
 
     // JWT에서 사용자 ID 추출
-    public String getUserIdFromToken(String token) {
+    public Claims getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject();
     }
 
     // JWT 유효성 검증

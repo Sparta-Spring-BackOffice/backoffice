@@ -65,7 +65,6 @@ public class AuthentificationController {
         }
         session.invalidate();
 
-
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
 }
