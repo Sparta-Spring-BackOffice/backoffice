@@ -103,7 +103,8 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 new BigDecimal(String.valueOf(product1.getPrice())),
                 OrderStatus.READY,
                 user1,
-                product1
+                product1,
+                superAdmin
         );
 
         Order order2 = new Order(
@@ -112,7 +113,8 @@ public class SuperAdminDataInitializer implements CommandLineRunner {
                 new BigDecimal(String.valueOf(product2.getPrice())),
                 OrderStatus.CANCELLED,
                 user2,
-                product2
+                product2,
+                superAdmin
         );
 
         orderRepository.save(order1);

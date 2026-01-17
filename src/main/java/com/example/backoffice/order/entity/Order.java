@@ -1,5 +1,6 @@
 package com.example.backoffice.order.entity;
 
+import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.common.config.BaseEntity;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.order.consts.OrderStatus;
@@ -38,15 +39,20 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Administrator administrator;
+
     private String cancelReason;
 
-    public Order(String orderNumber, Long quantity, BigDecimal amount, OrderStatus status, User user, Product product) {
+    public Order(String orderNumber, Long quantity, BigDecimal amount, OrderStatus status, User user, Product product, Administrator administrator) {
         this.orderNumber = orderNumber;
         this.quantity = quantity;
         this.amount = amount;
         this.status = status;
         this.user = user;
         this.product = product;
+        this.administrator = administrator;
     }
 
     public void statusNext(){

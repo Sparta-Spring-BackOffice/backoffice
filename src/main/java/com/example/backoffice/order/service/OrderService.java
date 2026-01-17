@@ -68,7 +68,7 @@ public class OrderService {
         String orderNumber = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)+ "-"
                 + UUID.randomUUID().toString().substring(0,8);
 
-        Order order = new Order(orderNumber, request.getQuantity(), amount, OrderStatus.READY, user, product);
+        Order order = new Order(orderNumber, request.getQuantity(), amount, OrderStatus.READY, user, product, admin);
         Order savedOrder = orderRepository.save(order);
 
         return new CreateOrderResponse(
