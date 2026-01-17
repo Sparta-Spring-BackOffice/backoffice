@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         ErrorResponse body = ErrorResponse.of(
-                HttpStatus.FORBIDDEN,
+                HttpStatus.UNAUTHORIZED,
                 code.getCode(),
                 code.getMessage(),
                 request.getRequestURI()
