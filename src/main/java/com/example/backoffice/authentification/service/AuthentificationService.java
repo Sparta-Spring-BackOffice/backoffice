@@ -43,7 +43,7 @@ public class AuthentificationService {
             case NON_ACTIVE -> throw new LoginFailException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
         }
 
-        String token = jwtUtil.generateToken(admin.getId(), admin.getEmail(), admin.getRole().getRoleName());
+        String token = jwtUtil.generateToken(admin.getId(), admin.getEmail(), admin.getRole());
 
         return new LoginResponse(
                 admin.getId(),

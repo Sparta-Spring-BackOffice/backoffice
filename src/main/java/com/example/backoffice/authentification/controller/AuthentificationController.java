@@ -16,12 +16,16 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,12 +48,19 @@ public class AuthentificationController {
         return ResponseProcess.responseWithBody(SuccessCode.LOGIN_SUCCESS, loginResponse);
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/admin/logout")
     public ResponseEntity<SuccessResponse<Void>> logout(Authentication auth){
 
         if(auth.getPrincipal() == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
+        String collect = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+//        System.out.println(auth.getAuthorities());
+        System.out.println(collect);
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.backoffice.security.jwt;
 
+import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
@@ -15,7 +16,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration} * 24")
+    @Value("${jwt.expiration}")
     private Long expiration; // 밀리초 단위 (예: 3600000 = 1시간)
 
     private Key getSigningKey() {
@@ -24,7 +25,7 @@ public class JwtUtil {
     }
 
     // JWT 생성
-    public String generateToken(Long Id, String userEmail, String role) {
+    public String generateToken(Long Id, String userEmail, AdminRole role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
@@ -32,7 +33,7 @@ public class JwtUtil {
                 .setSubject(userEmail)
                 .claim("id", Id)
                 .claim("email", userEmail)
-                .claim("role", role)
+                .claim("role", role.toAuthority().getAuthority())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
