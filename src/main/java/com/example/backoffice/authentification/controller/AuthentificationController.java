@@ -7,9 +7,11 @@ import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.authentification.service.AuthentificationService;
+import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.dto.SuccessResponse;
 import com.example.backoffice.common.responsecode.ResponseProcess;
 import com.example.backoffice.common.responsecode.SuccessCode;
+import com.example.backoffice.security.jwt.JwtUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequiredArgsConstructor
 public class AuthentificationController {
     private final AuthentificationService authentificationService;
+    private final JwtUtil jwtUtil; //Jwt 유틸리티
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/admin/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(
@@ -36,12 +40,14 @@ public class AuthentificationController {
         if(loginUser != null){
             throw new LoginFailException(AuthErrorCode.ALREADY_LOGIN);
         }
-        LoginResponse loginResponse = authentificationService.login(request);
+        String token = jwtUtil.generateToken(request.getEmail()); //jwt 기능
+        LoginResponse loginResponse = authentificationService.login(request, token);
 
         SessionAdmin sessionAdmin = new SessionAdmin(
                 loginResponse.getId(),
                 loginResponse.getEmail(),
-                loginResponse.getRole());
+                loginResponse.getRole(),
+                loginResponse.getToken());
 
         session.setAttribute("loginUser", sessionAdmin);
 

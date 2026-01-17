@@ -23,7 +23,7 @@ public class AuthentificationService {
     private final PasswordEncoder pe;
 
     @Transactional
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request, String token) {
         Administrator admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new LoginFailException(AuthErrorCode.LOGIN_ERROR)
         );
@@ -46,7 +46,8 @@ public class AuthentificationService {
                 admin.getId(),
                 admin.getEmail(),
                 admin.getRole(),
-                AuthStatus.LOGIN_SUCCESS
+                AuthStatus.LOGIN_SUCCESS,
+                token
         );
     }
  }
