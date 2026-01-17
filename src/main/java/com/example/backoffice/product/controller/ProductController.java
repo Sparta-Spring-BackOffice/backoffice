@@ -49,33 +49,32 @@ public class ProductController {
                 pageable.getSort()
         );
 
-        return ResponseProcess.responseWithBody()
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProduct(keyword, category, productStatus, converted));
+        return ResponseProcess.responseWithBodyNewMessage(SuccessCode.READ_SUCCESS , productService.findAllProduct(keyword, category, productStatus, converted), "상품 리스트 조회에 성공하였습니다");
     }
 
     @GetMapping("/admin/products/{productId}")
-    public ResponseEntity<GetOneProductResponse> getOneProduct(@PathVariable Long productId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findOneProduct(productId));
+    public ResponseEntity<SuccessResponse<GetOneProductResponse>> getOneProduct(@PathVariable Long productId) {
+        return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, productService.findOneProduct(productId));
     }
 
     @PutMapping("/admin/products/{productId}")
-    public ResponseEntity<UpdateProductInfoResponse> updateProduct(@Valid @RequestBody UpdateProductInfoRequest request, @PathVariable Long productId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductInfo(request, productId));
+    public ResponseEntity<SuccessResponse<UpdateProductInfoResponse>> updateProduct(@Valid @RequestBody UpdateProductInfoRequest request, @PathVariable Long productId) {
+        return ResponseProcess.responseWithBody(SuccessCode.UPDATE_SUCCESS, productService.updateProductInfo(request, productId));
     }
 
     @PutMapping("/admin/products/stock/{productId}")
-    public ResponseEntity<UpdateProductStockResponse> updateProductStock(@Valid @RequestBody UpdateProductStockRequest request, @PathVariable Long productId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStock(request, productId));
+    public ResponseEntity<SuccessResponse<UpdateProductStockResponse>> updateProductStock(@Valid @RequestBody UpdateProductStockRequest request, @PathVariable Long productId) {
+        return ResponseProcess.responseWithBody(SuccessCode.UPDATE_SUCCESS, productService.updateProductStock(request, productId));
     }
 
     @PutMapping("/admin/products/status/{productId}")
-    public ResponseEntity<UpdateProductStatusResponse> updateProductStatus(@Valid @RequestBody UpdateProductStatusRequest request, @PathVariable Long productId) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProductStatus(request, productId));
+    public ResponseEntity<SuccessResponse<UpdateProductStatusResponse>> updateProductStatus(@Valid @RequestBody UpdateProductStatusRequest request, @PathVariable Long productId) {
+       return ResponseProcess.responseWithBody(SuccessCode.UPDATE_SUCCESS, productService.updateProductStatus(request, productId));
     }
 
     @DeleteMapping("/admin/products/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<SuccessResponse<Void>> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseProcess.responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
     }
 }
