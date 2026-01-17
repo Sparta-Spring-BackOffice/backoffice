@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class ReviewException extends RuntimeException {
-    public HttpStatus httpStatus;
+    public HttpStatus status;
     public ErrorCode errorCode;
-    public ReviewException(HttpStatus httpStatus, ErrorCode errorCode) {
+    public ReviewException(HttpStatus status, ErrorCode errorCode) {
         super(errorCode.getMessage());
-        this.httpStatus = httpStatus;
+        this.status = status;
         this.errorCode = errorCode;
     }
 }

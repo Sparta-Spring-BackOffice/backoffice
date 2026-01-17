@@ -10,6 +10,7 @@ import com.example.backoffice.user.entity.User;
 import com.example.backoffice.user.exception.UserException;
 import com.example.backoffice.order.exception.OrderException;
 import com.example.backoffice.product.exception.ProductException;
+import com.example.backoffice.review.exception.ReviewException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(ReviewException.class)
+    public ResponseEntity<ErrorResponse> ReviewExceptionHandler(ReviewException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
+        return ResponseEntity.status(e.getStatus()).body(errorResponse);
+    }
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorResponse> CommonExceptionHandler(UserException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
