@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,15 +23,11 @@ import java.util.List;
 
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {
-        this.jwtUtil = jwtUtil;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -46,37 +43,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        // ✅ 토큰 없으면 401 (1번 방식)
+        // 토큰 없으면 401 (인증 에러 발생)
+        // 공통된 에러 응답 메세지 출력을 위해 별도로 구현
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             writeUnauthorized(request, response, AuthErrorCode.TOKEN_MISSING);
             return;
         }
         String token = authHeader.substring(7);
+
         try {
-            // ✅ void 메서드: 성공하면 그냥 통과, 실패하면 예외 던짐
+            // 토큰 서명검증, 유효기간 검증 성공 시 try문 실행, 실패시 catch문에서 예외 처리
             jwtUtil.validateOrThrow(token);
-
-            // ✅ Claims에서 id 꺼내기
-            Claims claims = jwtUtil.getUserIdFromToken(token);
-            Long id = claims.get("id", Long.class);
-            String role = claims.get("role", String.class);
-
-            // Spring Security 인가 판단은 반드시 GrantedAuthority 객체로만 판단
-            // Authentication(id,null,"권한")으론 판단 안됨
-            // "권한"을 Collection<? extends GrantedAuthority>으로 받아서 담아야 함
-            // SimpleGrantedAuthority -> "권한"을 GrantedAuthority 객체로 변환
-            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
             // 검증이 끝난 토큰으로 authentication 새로 생성
             // JWT - 신분증, Authentication - 출입증, 매번 요청시 출입증 발급
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(id, null, authorities);
-
+            Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(request, response);
 
         } catch (UnauthorizedException e) {
-            // ✅ UnauthorizedException에 errorCode getter 이름 맞춰서 사용
             writeUnauthorized(request, response, e.getAuthErrorCode());
             return;
         } catch (Exception e) {
@@ -85,6 +71,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    // response에 상태코드와 에러메세지 json을 첨부
+    // 에러 응답메세지 공통 규격을 지키기 위해 별도의 메서드로 구현
     private void writeUnauthorized(HttpServletRequest request,
                                    HttpServletResponse response,
                                    AuthErrorCode code) throws IOException {

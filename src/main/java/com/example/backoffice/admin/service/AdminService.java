@@ -10,7 +10,6 @@ import com.example.backoffice.admin.exception.InsufficientRoleException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
-import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
 import com.example.backoffice.jwt.JwtUtil;
@@ -18,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,8 +90,7 @@ public class AdminService {
         //이메일 중복 확인
         boolean duplicate = adminRepository.existsByEmail(request.getEmail());
         if(duplicate) throw new EmailDuplicationException(ErrorCode.DUPLICATE_EMAIL);
-        //비밀번호 암호화 및 저장
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+
         Administrator admin = new Administrator(
                 request.getName(),
                 request.getEmail(),
