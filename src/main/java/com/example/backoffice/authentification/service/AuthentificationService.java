@@ -11,9 +11,13 @@ import com.example.backoffice.authentification.exception.LoginFailException;
 import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 
 @Service
@@ -42,7 +46,17 @@ public class AuthentificationService {
             case NON_ACTIVE -> throw new LoginFailException(AuthErrorCode.LOGIN_NON_ACTIVE_ERROR);
         }
 
-        String token = jwtUtil.generateToken(admin.getId(), admin.getEmail(), admin.getRole());
+        // 아이디, 비밀번호 검증 후 authentication 생성
+        // Spring Security Authentication은 3가지가 중요
+        // principal - 사용자를 대표하는 핵심 식별값
+        // credentials - 보통 비밀번호를 저장(JWT에선 null)
+        // authorities - 권한 목록
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                admin.getId(), null, List.of(admin.getRole().toAuthority())
+        );
+
+        // authentication으로 토큰 생성
+        String token = jwtUtil.generateToken(authentication);
 
         return new LoginResponse(
                 admin.getId(),

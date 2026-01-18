@@ -10,17 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
+
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -52,30 +51,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             writeUnauthorized(request, response, AuthErrorCode.TOKEN_MISSING);
             return;
         }
-
         String token = authHeader.substring(7);
-
         try {
             // ✅ void 메서드: 성공하면 그냥 통과, 실패하면 예외 던짐
             jwtUtil.validateOrThrow(token);
 
             // ✅ Claims에서 id 꺼내기
             Claims claims = jwtUtil.getUserIdFromToken(token);
-            Long userId = claims.get("id", Long.class);
+            Long id = claims.get("id", Long.class);
+            String role = claims.get("role", String.class);
 
-            Collection<? extends GrantedAuthority> authorities =
-                    Arrays.stream(claims.get("role").toString().split(","))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+            // Spring Security 인가 판단은 반드시 GrantedAuthority 객체로만 판단
+            // Authentication(id,null,"권한")으론 판단 안됨
+            // "권한"을 Collection<? extends GrantedAuthority>으로 받아서 담아야 함
+            // SimpleGrantedAuthority -> "권한"을 GrantedAuthority 객체로 변환
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userId, null, authorities
-                    );
+            // 검증이 끝난 토큰으로 authentication 새로 생성
+            // JWT - 신분증, Authentication - 출입증, 매번 요청시 출입증 발급
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(id, null, authorities);
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
             filterChain.doFilter(request, response);
 
         } catch (UnauthorizedException e) {
