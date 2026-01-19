@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             writeUnauthorized(request, response, e.getAuthErrorCode());
             return;
         } catch (Exception e) {
-            writeUnauthorized(request, response, AuthErrorCode.TOKEN_MALFORMED);
+            writeUnauthorized(request, response, AuthErrorCode.TOKEN_INVALID);
             return;
         }
     }
