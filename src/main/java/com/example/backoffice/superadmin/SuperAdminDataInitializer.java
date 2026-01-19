@@ -4,7 +4,6 @@ import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.repository.AdminRepository;
-import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.entity.Order;
 import com.example.backoffice.order.repository.OrderRepository;
@@ -18,6 +17,7 @@ import com.example.backoffice.user.entity.User;
 import com.example.backoffice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
