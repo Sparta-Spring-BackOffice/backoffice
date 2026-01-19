@@ -27,6 +27,7 @@ public class AuthentificationService {
     @Transactional
     public LoginResponse login(LoginRequest request) {
 
+        // id/password/null
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         // 해당 authentication 에는 AdminDetails/null/AdminDetails.getAuthorities 가 들어가있음
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
