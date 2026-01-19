@@ -27,7 +27,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public List<GetAdminResponse> getAllAdmins(Long loginId, String keyword, String role, String status, Pageable pageable) {
+    public List<GetAdminResponse> getAllAdmins(String keyword, String role, String status, Pageable pageable) {
         Page<Administrator> findAdmins;
 
         if(keyword == null || keyword.isEmpty()){ //keyword에 대한 null 체크
@@ -58,7 +58,7 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public GetOneAdminResponse getOneAdmin(Long loginId, Long administratorId) {
+    public GetOneAdminResponse getOneAdmin(Long administratorId) {
         Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
@@ -115,7 +115,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void denyAdmin(RejectAdminRequest request, Long loginId, Long targetId) {
+    public void denyAdmin(RejectAdminRequest request, Long targetId) {
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //거절
@@ -123,7 +123,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void activateAdmin(Long loginId, Long targetId) {
+    public void activateAdmin(Long targetId) {
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //활성화
@@ -172,7 +172,7 @@ public class AdminService {
 
     //activateAdmin, denyAdmin과 동일
     @Transactional
-    public void suspendAdmin(Long loginId, Long targetId) {
+    public void suspendAdmin(Long targetId) {
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
@@ -180,7 +180,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void deactivateAdmin(Long loginId, Long targetId) {
+    public void deactivateAdmin(Long targetId) {
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
@@ -188,7 +188,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteAdmin(Long loginId, Long administratorId) {
+    public void deleteAdmin(Long administratorId) {
         //존재하는 관리자인지만 검사
         boolean existence = adminRepository.existsById(administratorId);
         if(!existence) throw new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND);
@@ -197,7 +197,7 @@ public class AdminService {
     }
 
     @Transactional
-    public UpdateAdminResponse updateBySuperAdmin(Long loginId, Long targetId, UpdateAdminRequest request) {
+    public UpdateAdminResponse updateBySuperAdmin(Long targetId, UpdateAdminRequest request) {
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(targetId);
         //업데이트
@@ -232,7 +232,7 @@ public class AdminService {
     }
 
     @Transactional
-    public UpdateAdminRoleResponse updateRole(Long loginId, Long targetId, @Valid UpdateAdminRoleRequest request) {
+    public UpdateAdminRoleResponse updateRole(Long targetId, @Valid UpdateAdminRoleRequest request) {
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(targetId);
 
