@@ -193,9 +193,9 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 
 ## 📊 ERD
 
-```
-![ERD.png](img/ERD.png)
-```
+
+![img_2.png](img_2.png)
+
 
 ---
 
