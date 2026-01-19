@@ -10,6 +10,7 @@ import com.example.backoffice.product.service.ProductService;
 import com.example.backoffice.review.dto.GetOneReviewResponse;
 import com.example.backoffice.review.dto.GetReviewResponse;
 import com.example.backoffice.review.service.ReviewService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +25,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
-    private final ProductService productService;
+    //사용 안 됨 private final ProductService productService;
 
 
     @GetMapping("/admin/reviews")
     public ResponseEntity<SuccessResponse<Page<GetReviewResponse>>> getReviews(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false) Integer rating
     ) {
         Pageable converted = PageRequest.of(
