@@ -4,6 +4,7 @@ import com.example.backoffice.admin.dto.*;
 import com.example.backoffice.admin.entity.Administrator;
 import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
+import com.example.backoffice.admin.exception.AdminException;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
 import com.example.backoffice.admin.exception.InsufficientRoleException;
@@ -17,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -261,6 +263,8 @@ public class AdminService {
 
     @Transactional
     public UpdateAdminRoleResponse updateRole(Long loginId, Long targetId, @Valid UpdateAdminRoleRequest request) {
+        //본인인지 검사
+        if(loginId.equals(targetId)) throw new AdminException(HttpStatus.FORBIDDEN, ErrorCode.ILLEGAL_SELF_UPDATE);
         //슈퍼 관리자인지 검사
         checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
