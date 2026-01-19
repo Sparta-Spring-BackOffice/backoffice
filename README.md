@@ -1,6 +1,6 @@
 # E-Commerce Backoffice System
 
-이커머스 백오피스 관리 시스템 - 관리자, 유저, 상품, 주문, 리뷰를 통합 관리하는 REST API 기반 백엔드 애플리케이션
+이커머스 백오피스 관리 시스템 - 관리자, 고객, 상품, 주문, 리뷰를 통합 관리하는 REST API 기반 백엔드 애플리케이션
 
 ## 📋 목차
 
@@ -36,7 +36,7 @@
 
 - **승인 기반 관리자 가입**: PENDING → ACTIVE/DENIED 워크플로우
 - **3단계 권한 체계**:
-  - `SUPER_ADMIN`: 전체 시스템 관리 (관리자 승인/거부, 유저 삭제)
+  - `SUPER_ADMIN`: 전체 시스템 관리 (관리자 승인/거부, 고객 삭제)
   - `OP_ADMIN`: 운영 관리 (상품 등록, 대시보드 접근)
   - `CS_ADMIN`: 고객 지원 (기본 조회 권한)
 - **상태 관리**: ACTIVE, NON_ACTIVE, SUSPENDED, PENDING, DENIED
@@ -47,15 +47,15 @@
   - 관리자 상태 변경 (활성화, 비활성화, 정지)
   - 역할 변경 및 삭제
 
-### 2. 유저 관리 (User)
+### 2. 고객 관리 (User)
 
 - **상태 관리**: ACTIVE, NON_ACTIVE, SUSPEND
-- **유저별 통계**: 총 주문 수, 총 구매 금액 (취소 주문 제외)
+- **고객별 통계**: 총 주문 수, 총 구매 금액 (취소 주문 제외)
 - **기능**:
-  - 유저 목록 조회 (이름/이메일 검색, 상태 필터링)
-  - 유저 상세 정보 및 주문 통계 조회
-  - 유저 정보 수정, 상태 변경
-  - 유저 삭제 (SUPER_ADMIN 전용)
+  - 고객 목록 조회 (이름/이메일 검색, 상태 필터링)
+  - 고객 상세 정보 및 주문 통계 조회
+  - 고객 정보 수정, 상태 변경
+  - 고객 삭제 (SUPER_ADMIN 전용)
 
 ### 3. 상품 관리 (Product)
 
@@ -63,7 +63,7 @@
   - 재고 0 이하 → `SOLD_OUT` 자동 전환
   - 재고 추가 시 → `FOR_SALE` 자동 복구
   - `DISCONTINUED` (단종) 상태는 수동 설정 유지
-- **저재고 알림**: 재고 6개 미만 상품 자동 추적
+- **저재고 감지**: 재고 6개 미만 상품 자동 추적
 - **기능**:
   - 상품 등록 (SUPER_ADMIN, OP_ADMIN)
   - 상품 목록 조회 (키워드, 카테고리, 상태 필터링)
@@ -84,7 +84,7 @@
   - 재고 부족 체크
 - **기능**:
   - 주문 생성 (주문번호 자동 생성: `날짜-UUID`)
-  - 주문 목록 조회 (주문번호/유저명 검색, 상태 필터)
+  - 주문 목록 조회 (주문번호/고객명 검색, 상태 필터)
   - 주문 상세 조회
   - 주문 상태 변경 (다음 단계로 전이)
   - 주문 취소 (READY 상태만 가능, 사유 필수)
@@ -94,7 +94,7 @@
 - **리뷰 통계**: 평균 평점, 별점 분포 (1~5점)
 - **상품별 리뷰 표시**: 최신 리뷰 3개 자동 조회
 - **기능**:
-  - 리뷰 목록 조회 (상품명/유저명 검색, 평점 필터)
+  - 리뷰 목록 조회 (상품명/고객명 검색, 평점 필터)
   - 리뷰 상세 조회
   - 리뷰 삭제 (SUPER_ADMIN, OP_ADMIN)
 
@@ -104,7 +104,7 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 
 #### Summary Stats
 - 총 관리자/활성 관리자
-- 총 유저/활성 유저
+- 총 고객/활성 고객
 - 총 상품/저재고 상품
 - 총 주문/오늘 주문
 - 총 리뷰/평균 평점
@@ -116,7 +116,7 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 
 #### Charts Stats
 - 리뷰 평점 분포
-- 유저 상태 분포
+- 고객 상태 분포
 - 카테고리별 상품 분포
 
 #### Late Order List
@@ -148,7 +148,6 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 
 ### Build & Test
 - **Gradle**: 빌드 자동화 도구
-- **JUnit 5**: 단위 테스트 프레임워크
 
 ---
 
@@ -195,53 +194,7 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 ## 📊 ERD
 
 ```
-┌─────────────────┐         ┌─────────────────┐
-│  administrators │◄────┐   │      users      │
-├─────────────────┤     │   ├─────────────────┤
-│ id (PK)         │     │   │ id (PK)         │
-│ name            │     │   │ name            │
-│ email (UK)      │     │   │ email (UK)      │
-│ password        │     │   │ phone_number    │
-│ phone           │     │   │ status          │
-│ role            │     │   │ created_at      │
-│ status          │     │   │ modified_at     │
-│ approved_at     │     │   └─────────────────┘
-│ decline_for     │     │            │
-│ created_at      │     │            │
-│ modified_at     │     │            │
-└─────────────────┘     │            │
-         │              │            │
-         │              │            │
-         ▼              │            ▼
-┌─────────────────┐     │   ┌─────────────────┐
-│    products     │     │   │     orders      │
-├─────────────────┤     └───┤─────────────────┤
-│ id (PK)         │         │ id (PK)         │
-│ name            │◄────────┤ order_number(UK)│
-│ category        │         │ quantity        │
-│ price           │         │ amount          │
-│ stock           │         │ status          │
-│ status          │         │ cancel_reason   │
-│ admin_id (FK)   │         │ user_id (FK)    │
-│ created_at      │         │ product_id (FK) │
-│ modified_at     │         │ admin_id (FK)   │
-└─────────────────┘         │ created_at      │
-         ▲                  │ modified_at     │
-         │                  └─────────────────┘
-         │                           │
-         │                           │
-         │                           ▼
-         │                  ┌─────────────────┐
-         └──────────────────┤     reviews     │
-                            ├─────────────────┤
-                            │ id (PK)         │
-                            │ rating          │
-                            │ content         │
-                            │ order_id (FK)   │
-                            │ product_id (FK) │
-                            │ created_at      │
-                            │ modified_at     │
-                            └─────────────────┘
+![ERD.png](img/ERD.png)
 ```
 
 ---
@@ -277,11 +230,11 @@ SUPER_ADMIN, OP_ADMIN 전용 실시간 통계 API
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
-| GET | `/admin/users` | 유저 목록 조회 | ALL |
-| GET | `/admin/users/{id}` | 유저 상세 조회 | ALL |
-| PUT | `/admin/users/{id}` | 유저 정보 수정 | ALL |
-| PUT | `/admin/users/status/{id}` | 유저 상태 변경 | ALL |
-| DELETE | `/admin/users/{id}` | 유저 삭제 | SUPER_ADMIN |
+| GET | `/admin/users` | 고객 목록 조회 | ALL |
+| GET | `/admin/users/{id}` | 고객 상세 조회 | ALL |
+| PUT | `/admin/users/{id}` | 고객 정보 수정 | ALL |
+| PUT | `/admin/users/status/{id}` | 고객 상태 변경 | ALL |
+| DELETE | `/admin/users/{id}` | 고객 삭제 | SUPER_ADMIN |
 
 ### Product Management
 
@@ -344,28 +297,10 @@ cd backoffice
 MySQL에 데이터베이스 생성:
 
 ```sql
-CREATE DATABASE backoffice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE backoffice;
 ```
 
-### 3. 환경 설정
-
-`src/main/resources/application.properties` 수정:
-
-```properties
-# Database
-spring.datasource.url=jdbc:mysql://localhost:3306/backoffice
-spring.datasource.username=root
-spring.datasource.password=your_password
-
-# JWT Secret (최소 32자 이상)
-jwt.secret=your-256-bit-secret-key-here-minimum-32-characters-required
-jwt.expiration=86400000  # 24시간 (밀리초)
-
-# JPA
-spring.jpa.hibernate.ddl-auto=create  # 최초 실행 후 update로 변경 권장
-```
-
-### 4. 빌드 및 실행
+### 3. 빌드 및 실행
 
 ```bash
 # Gradle 빌드
@@ -377,7 +312,7 @@ spring.jpa.hibernate.ddl-auto=create  # 최초 실행 후 update로 변경 권�
 
 서버는 기본적으로 `http://localhost:8080`에서 실행됩니다.
 
-### 5. 초기 데이터 확인
+### 4. 초기 데이터 확인
 
 애플리케이션 시작 시 `SuperAdminDataInitializer`가 자동 실행되어 테스트 데이터가 생성됩니다:
 
@@ -493,7 +428,7 @@ src/main/java/com/example/backoffice/
 │   └── service/
 ├── superadmin/                     # 초기화 모듈
 │   └── SuperAdminDataInitializer   # 테스트 데이터 생성
-└── user/                           # 유저 도메인
+└── user/                           # 고객 도메인
     ├── consts/
     ├── controller/
     ├── dto/
@@ -540,16 +475,16 @@ OrderException
 
 ### 3. N+1 문제 해결
 
-유저 목록 조회 시 주문 통계를 Map으로 변환하여 성능 최적화:
+고객 목록 조회 시 주문 통계를 Map으로 변환하여 성능 최적화:
 
 ```java
-// 1. 유저 목록 조회 (페이징)
+// 1. 고객 목록 조회 (페이징)
 Page<User> users = userRepository.findByNameKeyword(...);
 
-// 2. 유저 ID 리스트 추출
+// 2. 고객 ID 리스트 추출
 List<Long> userIdList = users.map(User::getId).toList();
 
-// 3. 한 번의 쿼리로 모든 유저의 주문 통계 조회
+// 3. 한 번의 쿼리로 모든 고객의 주문 통계 조회
 List<UserOrderDto> userOrders = orderRepository.findUserOrderDtoByUserIdList(userIdList);
 
 // 4. Map으로 변환하여 O(1) 조회
@@ -613,13 +548,27 @@ ProductReviewStatsDto getProductReviewStats(Long productId);
 
 ## 👤 작성자
 
+**강동혁**
+
+- Email: kangdh.no1@gmail.com
+- GitHub: [@youzting](https://github.com/youzting)
+
+**김세현**
+
+- Email: kimsparadise0202@gmail.com
+- GitHub: [@ginsengcandy](https://github.com/ginsengcandy)
+
+**김재진**
+
+- Email: truestory14@kakao.com
+- GitHub: [@JJK3187](https://github.com/JJK3187)
+
+**배주원**
+
+- Email: bjw446@naver.com
+- GitHub: [@bjw446](https://github.com/bjw446)
+
 **함형우**
 
-- Email: super@naver.com
-- GitHub: [@your-username](https://github.com/your-username)
-
----
-
-## 🙏 감사의 말
-
-이 프로젝트는 이커머스 백오피스 시스템의 핵심 기능을 구현하여 실무 환경에서 요구되는 기술 스택과 설계 패턴을 학습하기 위해 제작되었습니다.
+- Email: hyu@naver.com
+- GitHub: [@hyuham1355-stack](https://github.com/hyuham1335-stack)
