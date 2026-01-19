@@ -7,6 +7,7 @@ import com.example.backoffice.user.consts.UserStatus;
 import com.example.backoffice.user.dto.*;
 import com.example.backoffice.user.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,7 @@ public class UserController {
     public ResponseEntity<SuccessResponse<Page<GetUserResponse>>> getUsers(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false) UserStatus status
     ) {
         Pageable converted = PageRequest.of(

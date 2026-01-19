@@ -10,6 +10,7 @@ import com.example.backoffice.order.consts.OrderStatus;
 import com.example.backoffice.order.dto.*;
 import com.example.backoffice.order.service.OrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ public class OrderController {
     public ResponseEntity<SuccessResponse<Page<GetOrderResponse>>> getOrders(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
             @RequestParam(required = false) OrderStatus status
     ) {
         Pageable converted = PageRequest.of(

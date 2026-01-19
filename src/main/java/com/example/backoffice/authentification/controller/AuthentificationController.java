@@ -39,7 +39,7 @@ public class AuthentificationController {
 
 
     @PostMapping("/admin/logout")
-    public ResponseEntity<SuccessResponse<Void>> logout(Authentication auth){
+    public ResponseEntity<SuccessResponse<Void>> logout(/*Authentication auth*/){
 
         return ResponseProcess.responseWithBuild(SuccessCode.LOGOUT_SUCCESS, null);
     }

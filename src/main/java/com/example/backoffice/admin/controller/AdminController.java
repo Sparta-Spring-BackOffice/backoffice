@@ -7,6 +7,7 @@ import com.example.backoffice.authentification.exception.UnauthorizedException;
 import com.example.backoffice.common.dto.SuccessResponse;
 import com.example.backoffice.common.responsecode.SuccessCode;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,7 @@ public class AdminController {
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "1") int page
+            @RequestParam(defaultValue = "1") @Min(1) int page
     ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
