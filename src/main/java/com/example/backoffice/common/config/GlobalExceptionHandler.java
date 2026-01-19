@@ -36,19 +36,16 @@ public class GlobalExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
-
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<ErrorResponse> OrderExceptionHandler(OrderException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorResponse> ProductExceptionHandler(ProductException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(LoginDeniedException.class)
     public ResponseEntity<ErrorResponse> DeniedHandler(LoginDeniedException e, HttpServletRequest request) {
         String base = e.getAuthErrorCode().getMessage();
@@ -67,13 +64,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(e.getStatus()).body(body);
     }
-
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<ErrorResponse> CommonExceptionHandler(CommonException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(ReviewException.class)
     public ResponseEntity<ErrorResponse> ReviewExceptionHandler(ReviewException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());

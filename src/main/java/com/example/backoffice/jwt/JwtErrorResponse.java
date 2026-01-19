@@ -3,7 +3,6 @@ package com.example.backoffice.jwt;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
 
 @Getter

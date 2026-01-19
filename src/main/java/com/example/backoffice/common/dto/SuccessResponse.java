@@ -2,11 +2,7 @@ package com.example.backoffice.common.dto;
 
 import com.example.backoffice.common.responsecode.SuccessCode;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
-
 import java.time.LocalDateTime;
 
 @Getter

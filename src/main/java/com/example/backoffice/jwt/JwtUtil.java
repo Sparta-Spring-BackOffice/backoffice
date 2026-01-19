@@ -1,11 +1,8 @@
 package com.example.backoffice.jwt;
 
 import com.example.backoffice.admin.entity.Administrator;
-import com.example.backoffice.admin.exception.AdminNotFoundException;
-import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
-import com.example.backoffice.common.responsecode.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -15,21 +12,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Array;
-import java.nio.file.AccessDeniedException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
-
-//    private final AdminRepository adminRepository;
 
     @Value("${jwt.secret}")
     private String secretKey;

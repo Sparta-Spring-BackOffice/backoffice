@@ -29,10 +29,10 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         // 응답 값에 구조 전달(JSON, UTF-8)
         response.setContentType("application/json;charset=UTF-8");
-
+        AuthErrorCode errorCode = AuthErrorCode.ACCESS_DENIED;
         JwtErrorResponse body = JwtErrorResponse.of(
                 HttpStatus.FORBIDDEN,
-                AuthErrorCode.ACCESS_DENIED,
+                errorCode,
                 request.getRequestURI()
         );
         // jwtErrorResponse 객체를 JSON 문자열로 변환

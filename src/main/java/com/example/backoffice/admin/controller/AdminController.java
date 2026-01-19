@@ -15,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import static com.example.backoffice.common.responsecode.ResponseProcess.responseWithBody;
 import static com.example.backoffice.common.responsecode.ResponseProcess.responseWithBuild;
 
@@ -44,8 +42,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateAdmin(
             Authentication auth,
             @Valid @RequestBody UpdateAdminRequest request
-    )
-    {
+    ){
         if (auth == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -56,8 +53,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<UpdateAdminPasswordResponse>> updateAdminPassword(
             Authentication auth,
             @Valid @RequestBody UpdateAdminPasswordRequest request
-    )
-    {
+    ){
         return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateAdminPassword((Long) auth.getPrincipal(), request));
     }
     //관리자 목록 전체조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
@@ -70,8 +66,7 @@ public class AdminController {
             @RequestParam(required = false) String status,
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "1") int page
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -100,8 +95,7 @@ public class AdminController {
             @Valid @RequestBody RejectAdminRequest request,
             @PathVariable Long administratorId,
             Authentication auth
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -114,8 +108,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<Void>> activateAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -128,8 +121,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<Void>> suspendAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -142,8 +134,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<Void>> deactivateAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -156,8 +147,7 @@ public class AdminController {
     public ResponseEntity<SuccessResponse<Void>> deleteAdmin(
             @PathVariable Long administratorId,
             Authentication auth
-    )
-    {
+    ){
         if(auth == null){
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
@@ -171,8 +161,7 @@ public class AdminController {
             Authentication auth,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRequest request
-    )
-    {
+    ){
         if (auth == null) {
             throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
         }
