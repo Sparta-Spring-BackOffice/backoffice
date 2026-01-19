@@ -107,6 +107,9 @@ public class AdminService {
     public UpdateAdminResponse updateAdmin(Long loginId, UpdateAdminRequest request) {
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(loginId);
+        //이메일 중복 확인
+        boolean duplicate = adminRepository.existsByEmail(request.getEmail());
+        if(duplicate) throw new EmailDuplicationException(ErrorCode.DUPLICATE_EMAIL);
         //값 업데이트
         return updateResponse(administrator, request);
     }
