@@ -1,5 +1,6 @@
 package com.example.backoffice.common.config;
 
+import com.example.backoffice.jwt.JwtAccessDeniedHandler;
 import com.example.backoffice.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,9 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, JwtAccessDeniedHandler jwtAccessDeniedHandler) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
     @Bean
@@ -31,6 +33,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 // JWT는 스테이트리스, CSRF 보호가 필요 없음
                 .csrf(AbstractHttpConfigurer::disable)
@@ -58,6 +61,9 @@ public class SecurityConfig {
                         .requestMatchers("/admin/dashboards/**")
                         .hasAnyRole("SUPER_ADMIN", "OP_ADMIN")
                         .anyRequest().authenticated() // 나머지는 JWT 필수
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

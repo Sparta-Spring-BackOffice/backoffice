@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Array;
+import java.nio.file.AccessDeniedException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
