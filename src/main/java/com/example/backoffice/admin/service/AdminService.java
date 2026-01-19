@@ -6,21 +6,18 @@ import com.example.backoffice.admin.consts.AdminRole;
 import com.example.backoffice.admin.consts.AdminStatus;
 import com.example.backoffice.admin.exception.AdminNotFoundException;
 import com.example.backoffice.admin.exception.EmailDuplicationException;
-import com.example.backoffice.admin.exception.InsufficientRoleException;
 import com.example.backoffice.admin.repository.AdminRepository;
 import com.example.backoffice.authentification.exception.AuthErrorCode;
 import com.example.backoffice.authentification.exception.UnauthorizedException;
-import com.example.backoffice.common.config.PasswordEncoder;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import com.example.backoffice.common.exception.InvalidRequestException;
-import com.example.backoffice.security.jwt.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -28,13 +25,9 @@ import java.util.List;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
     public List<GetAdminResponse> getAllAdmins(Long loginId, String keyword, String role, String status, Pageable pageable) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
-
         Page<Administrator> findAdmins;
 
         if(keyword == null || keyword.isEmpty()){ //keyword에 대한 null 체크
@@ -66,8 +59,6 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public GetOneAdminResponse getOneAdmin(Long loginId, Long administratorId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         Administrator administrator = adminRepository.findById(administratorId).orElseThrow(
                 () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
         );
@@ -90,8 +81,7 @@ public class AdminService {
         //이메일 중복 확인
         boolean duplicate = adminRepository.existsByEmail(request.getEmail());
         if(duplicate) throw new EmailDuplicationException(ErrorCode.DUPLICATE_EMAIL);
-        //비밀번호 암호화 및 저장
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+
         Administrator admin = new Administrator(
                 request.getName(),
                 request.getEmail(),
@@ -115,7 +105,6 @@ public class AdminService {
 
     @Transactional
     public UpdateAdminResponse updateAdmin(Long loginId, UpdateAdminRequest request) {
-
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(loginId);
         //값 업데이트
@@ -124,8 +113,6 @@ public class AdminService {
 
     @Transactional
     public void denyAdmin(RejectAdminRequest request, Long loginId, Long targetId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //거절
@@ -134,8 +121,6 @@ public class AdminService {
 
     @Transactional
     public void activateAdmin(Long loginId, Long targetId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //활성화
@@ -185,8 +170,6 @@ public class AdminService {
     //activateAdmin, denyAdmin과 동일
     @Transactional
     public void suspendAdmin(Long loginId, Long targetId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
@@ -195,8 +178,6 @@ public class AdminService {
 
     @Transactional
     public void deactivateAdmin(Long loginId, Long targetId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator targetAdmin = findAndGet(targetId);
         //상태 변경
@@ -205,8 +186,6 @@ public class AdminService {
 
     @Transactional
     public void deleteAdmin(Long loginId, Long administratorId) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지만 검사
         boolean existence = adminRepository.existsById(administratorId);
         if(!existence) throw new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND);
@@ -216,21 +195,10 @@ public class AdminService {
 
     @Transactional
     public UpdateAdminResponse updateBySuperAdmin(Long loginId, Long targetId, UpdateAdminRequest request) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(targetId);
         //업데이트
         return updateResponse(administrator, request);
-    }
-    //(공통기능)슈퍼 관리자인지 검사
-    private void checkSuperAdmin(Long loginId) {
-        Administrator loginAdmin = adminRepository.findById(loginId).orElseThrow(
-                () -> new AdminNotFoundException(ErrorCode.ADMIN_NOT_FOUND)
-        );
-        if (loginAdmin.getRole() != AdminRole.SUPER_ADMIN) {
-            throw new InsufficientRoleException(ErrorCode.INSUFFICIENT_ADMIN_ROLE);
-        }
     }
 
     //(공통기능)존재하는 관리자인지 검사
@@ -262,10 +230,9 @@ public class AdminService {
 
     @Transactional
     public UpdateAdminRoleResponse updateRole(Long loginId, Long targetId, @Valid UpdateAdminRoleRequest request) {
-        //슈퍼 관리자인지 검사
-        checkSuperAdmin(loginId);
         //존재하는 관리자인지 검사
         Administrator administrator = findAndGet(targetId);
+
         //업데이트
         administrator.updateRole(request.getRole());
         adminRepository.flush();

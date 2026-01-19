@@ -1,12 +1,10 @@
 package com.example.backoffice.common.config;
 
-import com.example.backoffice.admin.consts.DeclineReason;
 import com.example.backoffice.admin.exception.AdminException;
 import com.example.backoffice.authentification.exception.AuthentificationException;
 import com.example.backoffice.authentification.exception.LoginDeniedException;
 import com.example.backoffice.common.dto.ErrorResponse;
 import com.example.backoffice.common.exception.CommonException;
-import com.example.backoffice.user.entity.User;
 import com.example.backoffice.user.exception.UserException;
 import com.example.backoffice.order.exception.OrderException;
 import com.example.backoffice.product.exception.ProductException;
@@ -38,19 +36,16 @@ public class GlobalExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
-
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<ErrorResponse> OrderExceptionHandler(OrderException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorResponse> ProductExceptionHandler(ProductException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(LoginDeniedException.class)
     public ResponseEntity<ErrorResponse> DeniedHandler(LoginDeniedException e, HttpServletRequest request) {
         String base = e.getAuthErrorCode().getMessage();
@@ -69,13 +64,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(e.getStatus()).body(body);
     }
-
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<ErrorResponse> CommonExceptionHandler(CommonException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
     @ExceptionHandler(ReviewException.class)
     public ResponseEntity<ErrorResponse> ReviewExceptionHandler(ReviewException e, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
@@ -86,5 +79,4 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(e.getStatus(), e.getErrorCode().getCode(), e.getErrorCode().getMessage(), request.getRequestURI());
         return ResponseEntity.status(e.getStatus()).body(errorResponse);
     }
-
 }

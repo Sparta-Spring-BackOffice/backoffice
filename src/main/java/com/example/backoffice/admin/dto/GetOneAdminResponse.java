@@ -1,7 +1,6 @@
 package com.example.backoffice.admin.dto;
 
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter

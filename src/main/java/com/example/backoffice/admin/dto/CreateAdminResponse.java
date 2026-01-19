@@ -1,7 +1,6 @@
 package com.example.backoffice.admin.dto;
 
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,7 +13,6 @@ public class CreateAdminResponse {
     private final String role;
     private final String status;
     private final LocalDateTime createdAt;
-
 
     public CreateAdminResponse(String message, Long id, String name, String email, String phone, String role, String status, LocalDateTime createdAt) {
         this.message = message;

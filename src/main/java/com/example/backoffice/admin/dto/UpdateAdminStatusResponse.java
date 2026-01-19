@@ -2,7 +2,6 @@ package com.example.backoffice.admin.dto;
 
 import com.example.backoffice.admin.consts.AdminStatus;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter

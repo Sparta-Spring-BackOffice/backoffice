@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,36 +26,37 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ProductService productService;
 
+
     @GetMapping("/admin/reviews")
-   public ResponseEntity<SuccessResponse<Page<GetReviewResponse>>> getReviews(
-           @RequestParam(required = false) String keyword,
-           @PageableDefault Pageable pageable,
-           @RequestParam(defaultValue = "1") int page,
-           @RequestParam(required = false) Integer rating
-   ){
-       Pageable converted = PageRequest.of(
-               page -1,
-               pageable.getPageSize(),
-               pageable.getSort()
-       );
+    public ResponseEntity<SuccessResponse<Page<GetReviewResponse>>> getReviews(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault Pageable pageable,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) Integer rating
+    ) {
+        Pageable converted = PageRequest.of(
+                page - 1,
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+        return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findReview(keyword, converted, rating));
+    }
 
-       return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findReview(keyword, converted, rating));
-   }
+    @GetMapping("/admin/reviews/{reviewId}")
+    public ResponseEntity<SuccessResponse<GetOneReviewResponse>> getReview(@PathVariable Long reviewId) {
+        return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findOne(reviewId));
+    }
 
-   @GetMapping("/admin/reviews/{reviewId}")
-    public ResponseEntity<SuccessResponse<GetOneReviewResponse>> getReview(@PathVariable Long  reviewId) {
-       return ResponseProcess.responseWithBody(SuccessCode.READ_SUCCESS, reviewService.findOne(reviewId));
-   }
-
-   @DeleteMapping("/admin/reviews/{reviewId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN') AND hasRole('OP_ADMIN')")
+    @DeleteMapping("/admin/reviews/{reviewId}")
     public ResponseEntity<SuccessResponse<Void>> deleteReview(
-            @PathVariable Long  reviewId,
+            @PathVariable Long reviewId,
             @SessionAttribute(name = "loginUser", required = false) SessionAdmin loginAdmin
-   ) {
-       if(loginAdmin == null){
-           throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-       }
-       reviewService.deleteReview(reviewId);
-       return ResponseProcess.responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
-   }
+    ) {
+        if (loginAdmin == null) {
+            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
+        }
+        reviewService.deleteReview(reviewId);
+        return ResponseProcess.responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
+    }
 }

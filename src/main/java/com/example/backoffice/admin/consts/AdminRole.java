@@ -4,6 +4,8 @@ import com.example.backoffice.admin.exception.NoSuchAdminRoleException;
 import com.example.backoffice.common.responsecode.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Getter
 @AllArgsConstructor
@@ -21,5 +23,9 @@ public enum AdminRole {
             }
         }
         throw new NoSuchAdminRoleException(ErrorCode.NO_SUCH_ROLE);
+    }
+
+    public GrantedAuthority toAuthority() {
+        return new SimpleGrantedAuthority("ROLE_" + name());
     }
 }

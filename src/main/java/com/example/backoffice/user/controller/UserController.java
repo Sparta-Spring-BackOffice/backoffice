@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,6 +60,7 @@ public class UserController {
         return ResponseProcess.responseWithBody(SuccessCode.UPDATE_SUCCESS, userService.updateUserStatus(userId, request));
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/admin/users/{userId}")
     public ResponseEntity<SuccessResponse<Void>> deleteUser( @PathVariable Long userId) {
         userService.delete(userId);
