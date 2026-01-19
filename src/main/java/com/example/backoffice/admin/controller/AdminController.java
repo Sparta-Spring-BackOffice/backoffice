@@ -76,57 +76,42 @@ public class AdminController {
                 pageable.getPageSize(),
                 pageable.getSort()
         );
-        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getAllAdmins((Long)auth.getPrincipal(), keyword, role, status, converted));
+        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getAllAdmins(keyword, role, status, converted));
     }
     //관리자 단건조회(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<SuccessResponse<GetOneAdminResponse>> getOneAdmin(
-            Authentication auth,
             @PathVariable Long administratorId) {
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getOneAdmin((Long)auth.getPrincipal(), administratorId));
+        return responseWithBody(SuccessCode.READ_SUCCESS, adminService.getOneAdmin(administratorId));
     }
     //관리자 거부(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/denial")
     public ResponseEntity<SuccessResponse<Void>> denyAdmin(
             @Valid @RequestBody RejectAdminRequest request,
-            @PathVariable Long administratorId,
-            Authentication auth
+            @PathVariable Long administratorId
     ){
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        adminService.denyAdmin(request, (Long) auth.getPrincipal(), administratorId );
+        adminService.denyAdmin(request, administratorId );
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/activation")
     public ResponseEntity<SuccessResponse<Void>> activateAdmin(
-            @PathVariable Long administratorId,
-            Authentication auth
+            @PathVariable Long administratorId
+
     ){
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        adminService.activateAdmin((Long)auth.getPrincipal(), administratorId );
+        adminService.activateAdmin(administratorId );
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 권한정지(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}/suspension")
     public ResponseEntity<SuccessResponse<Void>> suspendAdmin(
-            @PathVariable Long administratorId,
-            Authentication auth
+            @PathVariable Long administratorId
     ){
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        adminService.suspendAdmin((Long)auth.getPrincipal(), administratorId );
+        adminService.suspendAdmin(administratorId );
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 비활성화(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
@@ -136,49 +121,35 @@ public class AdminController {
             @PathVariable Long administratorId,
             Authentication auth
     ){
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        adminService.deactivateAdmin((Long)auth.getPrincipal(), administratorId);
+        adminService.deactivateAdmin(administratorId);
         return responseWithBuild(SuccessCode.UPDATE_SUCCESS, null);
     }
     //관리자 삭제(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/admin/administrators/{administratorId}/deletion")
     public ResponseEntity<SuccessResponse<Void>> deleteAdmin(
-            @PathVariable Long administratorId,
-            Authentication auth
+            @PathVariable Long administratorId
     ){
-        if(auth == null){
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        adminService.deleteAdmin((Long)auth.getPrincipal(), administratorId);
+        adminService.deleteAdmin(administratorId);
         return responseWithBuild(SuccessCode.DELETE_SUCCESS, null);
     }
     //관리자 정보 수정(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/{administratorId}")
     public ResponseEntity<SuccessResponse<UpdateAdminResponse>> updateBySuperAdmin(
-            Authentication auth,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRequest request
     ){
-        if (auth == null) {
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateBySuperAdmin((Long)auth.getPrincipal(), administratorId, request));
+        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateBySuperAdmin(administratorId, request));
     }
 
 //  관리자 역할 변경(조건 : 로그인, 권한 수준 : 슈퍼 관리자)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/admin/administrators/role/{administratorId}")
     public ResponseEntity<SuccessResponse<UpdateAdminRoleResponse>> updateRole(
-            Authentication auth,
             @PathVariable Long administratorId,
             @Valid @RequestBody UpdateAdminRoleRequest request){
-        if (auth == null) {
-            throw new UnauthorizedException(AuthErrorCode.NOT_LOGIN);
-        }
-        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateRole((Long)auth.getPrincipal(), administratorId, request));
+
+        return responseWithBody(SuccessCode.UPDATE_SUCCESS, adminService.updateRole(administratorId, request));
     }
 }
